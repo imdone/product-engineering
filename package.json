@@ -1,6 +1,6 @@
 {
   "name": "@imdone/product-engineering",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Open product-engineering methods and AI skills for hypothesis-driven development.",
   "author": {
     "name": "imdone",
@@ -32,6 +32,7 @@
   },
   "files": [
     "README.md",
+    "CHANGELOG.md",
     "LICENSE.md",
     "CONTRIBUTING.md",
     ".agents",

@@ -19,11 +19,11 @@ function main() {
     .toLowerCase();
   const errors = [];
 
-  if (!combined.includes("append") || !combined.includes("progress-notes.md")) {
-    errors.push("HDD progress-note guidance must record notes directly in the local progress-note artifact.");
+  if (!combined.includes("imdone note") || !combined.includes("try `imdone note")) {
+    errors.push("HDD progress-note guidance must tell agents to try `imdone note` first.");
   }
-  if (combined.includes("try `imdone note") || combined.includes("only if `imdone note`")) {
-    errors.push("Public HDD progress-note guidance must not require imdone before writing local notes.");
+  if (!combined.includes("append") || !combined.includes("only if `imdone note` is unavailable")) {
+    errors.push("HDD progress-note guidance must allow direct Markdown appends only when `imdone note` is unavailable or fails.");
   }
   if (!combined.includes("attachments/progress-notes.md")) {
     errors.push("HDD progress lookup must name `attachments/progress-notes.md` as the canonical progress-note artifact.");
@@ -37,7 +37,7 @@ function main() {
     return 1;
   }
 
-  console.log("OK: public HDD writes progress notes directly and keeps the legacy plan fallback.");
+  console.log("OK: HDD progress-note guidance tries imdone note first, uses direct Markdown fallback only when needed, and keeps legacy plan fallback.");
   return 0;
 }
 

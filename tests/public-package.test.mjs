@@ -33,6 +33,7 @@ async function markdownFiles(directory) {
 test('ships the required public package and plugin files', async () => {
   const requiredFiles = [
     'README.md',
+    'CHANGELOG.md',
     'LICENSE.md',
     'CONTRIBUTING.md',
     '.agents/plugins/marketplace.json',
@@ -136,4 +137,45 @@ test('has no hard imdone dependency in public HDD markdown', async () => {
   for (const dependency of forbiddenHardDependencies) {
     assert.doesNotMatch(combined, dependency.pattern, dependency.label);
   }
+});
+
+test('hard-dependency guard rejects mandatory imdone prerequisites', () => {
+  const hardDependencies = [
+    'HDD requires imdone-cli installed before the session can begin.',
+    'You must configure imdone before using this skill.',
+    'Stop the workflow when imdone is unavailable.'
+  ];
+
+  for (const text of hardDependencies) {
+    assert.ok(
+      forbiddenHardDependencies.some(({ pattern }) => pattern.test(text)),
+      text
+    );
+  }
+});
+
+test('uses deterministic imdone integrations with a complete tool-neutral fallback', async () => {
+  const contractFiles = [
+    'plugins/product-engineering/skills/hypothesis-driven-development/SKILL.md',
+    'plugins/product-engineering/skills/hypothesis-driven-development/references/session-setup.md',
+    'plugins/product-engineering/skills/hypothesis-driven-development/references/interaction-contract.md',
+    'plugins/product-engineering/skills/hypothesis-driven-development/references/prove-the-outcome.md'
+  ];
+  const combined = (
+    await Promise.all(contractFiles.map((file) => read(file)))
+  ).join('\n');
+
+  assert.match(combined, /imdone --version/);
+  assert.match(combined, /imdone agent-config get-config/);
+  assert.match(combined, /status:\s*[`'"]?ok/i);
+  assert.match(combined, /imdone note <issueKey> "<note>"/);
+  assert.match(
+    combined,
+    /direct(?:ly)?[^\n]*progress-notes\.md[^\n]*(?:only if|when)[^\n]*imdone note[^\n]*(?:unavailable|fails|exits non-zero)/i
+  );
+  assert.match(combined, /imdone template|imdone-template/);
+  assert.match(combined, /imdone pull/);
+  assert.match(combined, /imdone push/);
+  assert.match(combined, /plain Markdown/i);
+  assert.match(combined, /external evidence gate/i);
 });

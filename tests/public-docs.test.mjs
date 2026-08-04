@@ -29,6 +29,15 @@ test('documents independent use and public feedback', async () => {
     readme,
     /claude plugin install product-engineering@product-engineering/i
   );
+  assert.match(
+    readme,
+    /npx skills add imdone\/product-engineering --skill hypothesis-driven-development/i
+  );
+  assert.match(readme, /https:\/\/skills\.sh\/b\/imdone\/product-engineering/i);
+  assert.match(
+    readme,
+    /https:\/\/skills\.sh\/imdone\/product-engineering\/hypothesis-driven-development/i
+  );
   assert.match(readme, /github\.com\/imdone\/product-engineering\/issues/i);
   assert.match(readme, /What is HDD/i);
   assert.match(readme, /do (I|you) need imdone/i);
@@ -40,4 +49,20 @@ test('documents independent use and public feedback', async () => {
     packageManifest.bugs.url,
     'https://github.com/imdone/product-engineering/issues'
   );
+});
+
+test('documents public release history', async () => {
+  const changelog = await fs.readFile(path.join(root, 'CHANGELOG.md'), 'utf8');
+  const packageManifest = JSON.parse(
+    await fs.readFile(path.join(root, 'package.json'), 'utf8')
+  );
+
+  assert.match(changelog, /^# Changelog/m);
+  assert.match(changelog, /^## 0\.2\.1 - 2026-08-04/m);
+  assert.match(changelog, /deterministic/i);
+  assert.match(changelog, /imdone note/i);
+  assert.match(changelog, /^## 0\.2\.0 - 2026-08-04/m);
+  assert.match(changelog, /Codex/i);
+  assert.match(changelog, /Claude Code/i);
+  assert.ok(packageManifest.files.includes('CHANGELOG.md'));
 });

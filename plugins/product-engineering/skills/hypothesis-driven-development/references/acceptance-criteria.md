@@ -21,7 +21,7 @@ Turn this:
 - "The attachment flow should work correctly."
 
 Into this:
-- "Given a provider-backed issue with one new local attachment, when the user runs the repository's approved sync command, then the attachment is uploaded and the issue body link points to the uploaded file."
+- "Given a GitHub-backed issue with one new local attachment, when the user runs `imdone push`, then the attachment is uploaded and the issue body link points to the uploaded file."
 
 ## Alignment Questions
 
