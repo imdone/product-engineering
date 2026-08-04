@@ -78,6 +78,8 @@ Full HDD fits ambiguous, high-risk, cross-team, or implementation-heavy work. Li
 
 HDD is the method. imdone is an optional operational layer for teams that want the story, attachments, chronological notes, and Jira or GitHub state synchronized as shared working memory.
 
+If you want that operational layer, learn more at [imdone.io](https://imdone.io) or install the [imdone CLI from npm](https://www.npmjs.com/package/imdone-cli).
+
 The public skill checks whether imdone is installed and whether the current workspace supports its project features. When those deterministic checks pass, it uses imdone for session state, progress notes, templates, and user-approved provider sync; in particular, it tries `imdone note` before writing a progress note directly. If imdone is absent or a command fails, HDD continues with local Markdown and external evidence gates. No imdone command, account, or project configuration is required to practice the method.
 
 ## Feedback And Contributions

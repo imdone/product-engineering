@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+
+- Linked the optional imdone operational layer to imdone.io and the imdone-cli npm package from the public README.
+
 ## 0.2.1 - 2026-08-04
 
 ### Fixed
