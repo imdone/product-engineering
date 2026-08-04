@@ -13,6 +13,22 @@ test('documents independent use and public feedback', async () => {
 
   assert.match(readme, /without imdone/i);
   assert.match(readme, /install|copy/i);
+  assert.match(
+    readme,
+    /codex plugin marketplace add imdone\/product-engineering --ref main/i
+  );
+  assert.match(
+    readme,
+    /codex plugin add product-engineering@product-engineering/i
+  );
+  assert.match(
+    readme,
+    /claude plugin marketplace add imdone\/product-engineering/i
+  );
+  assert.match(
+    readme,
+    /claude plugin install product-engineering@product-engineering/i
+  );
   assert.match(readme, /github\.com\/imdone\/product-engineering\/issues/i);
   assert.match(readme, /What is HDD/i);
   assert.match(readme, /do (I|you) need imdone/i);

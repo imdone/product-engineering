@@ -1,6 +1,6 @@
 {
   "name": "@imdone/product-engineering",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Open product-engineering methods and AI skills for hypothesis-driven development.",
   "author": {
     "name": "imdone",
@@ -20,7 +20,9 @@
     "hypothesis-driven-development",
     "hdd",
     "ai-skills",
-    "codex"
+    "codex",
+    "claude-code",
+    "plugin-marketplace"
   ],
   "license": "MIT",
   "type": "module",
@@ -32,6 +34,8 @@
     "README.md",
     "LICENSE.md",
     "CONTRIBUTING.md",
+    ".agents",
+    ".claude-plugin",
     "plugins",
     "scripts",
     "templates",

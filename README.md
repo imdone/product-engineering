@@ -8,13 +8,36 @@ You can practice HDD without imdone. The public skill works with Markdown files 
 
 ## What You Get
 
-- an installable Codex plugin under `plugins/product-engineering/`
+- a repository-hosted marketplace for Codex and Claude Code
+- one shared plugin under `plugins/product-engineering/`
 - the full HDD skill, focused references, and plan evaluators
 - full and lightweight Markdown story templates
 - a plain-Markdown example that does not require a provider integration
 - an issue and contribution path for improving the method
 
-## Try HDD Without Imdone
+## Install From The Marketplace
+
+Both Codex and Claude Code use this GitHub repository as the marketplace and install the same `product-engineering` plugin payload.
+
+### Codex
+
+```sh
+codex plugin marketplace add imdone/product-engineering --ref main
+codex plugin add product-engineering@product-engineering
+```
+
+### Claude Code
+
+```sh
+claude plugin marketplace add imdone/product-engineering
+claude plugin install product-engineering@product-engineering
+```
+
+Then ask your coding agent:
+
+> Use the hypothesis-driven-development skill for this story. Read the story and HDD artifacts, then follow the session contract.
+
+## Try HDD Without A Plugin
 
 Clone this repository:
 
@@ -24,18 +47,13 @@ cd product-engineering
 npm test
 ```
 
-To use the skill directly in a Codex project before marketplace publication, copy its directory into the project's skills folder:
+To practice without an AI plugin loader, copy the full template into your work tracker or repository:
 
 ```sh
-mkdir -p .codex/skills
-cp -R plugins/product-engineering/skills/hypothesis-driven-development .codex/skills/
+cp templates/hypothesis-driven-development.md my-hdd-story.md
 ```
 
-Then ask your coding agent:
-
-> Use the hypothesis-driven-development skill for this story. Read the story and HDD artifacts, then follow the session contract.
-
-To practice without an AI skill loader, copy `templates/hypothesis-driven-development.md` into your work tracker or repository and keep the story plus its evidence together.
+Keep the story plus its evidence together. This plain-Markdown path does not require Codex, Claude Code, or imdone.
 
 ## The HDD Loop
 

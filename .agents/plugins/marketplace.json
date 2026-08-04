@@ -1,0 +1,20 @@
+{
+  "name": "product-engineering",
+  "interface": {
+    "displayName": "Product Engineering"
+  },
+  "plugins": [
+    {
+      "name": "product-engineering",
+      "source": {
+        "source": "local",
+        "path": "./plugins/product-engineering"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "name": "product-engineering",
+  "description": "Open methods and AI skills for hypothesis-driven product engineering.",
+  "owner": {
+    "name": "imdone",
+    "email": "support@imdone.io"
+  },
+  "plugins": [
+    {
+      "name": "product-engineering",
+      "source": "./plugins/product-engineering",
+      "description": "Practice Hypothesis Driven Development with or without imdone.",
+      "category": "Productivity",
+      "tags": [
+        "product-engineering",
+        "hypothesis-driven-development",
+        "hdd"
+      ]
+    }
+  ]
+}

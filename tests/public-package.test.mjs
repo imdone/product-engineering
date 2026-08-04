@@ -35,7 +35,10 @@ test('ships the required public package and plugin files', async () => {
     'README.md',
     'LICENSE.md',
     'CONTRIBUTING.md',
+    '.agents/plugins/marketplace.json',
+    '.claude-plugin/marketplace.json',
     'plugins/product-engineering/.codex-plugin/plugin.json',
+    'plugins/product-engineering/.claude-plugin/plugin.json',
     'templates/hypothesis-driven-development.md',
     'templates/lightweight-hypothesis-driven-development.md',
     'examples/plain-markdown-story.md',
@@ -57,11 +60,64 @@ test('uses a matching package and plugin identity', async () => {
   );
 
   assert.equal(packageManifest.name, '@imdone/product-engineering');
+  assert.ok(packageManifest.files.includes('.agents'));
+  assert.ok(packageManifest.files.includes('.claude-plugin'));
   assert.ok(packageManifest.files.includes('scripts'));
   assert.equal(pluginManifest.name, 'product-engineering');
   assert.equal(path.basename(pluginRoot), pluginManifest.name);
   assert.equal(pluginManifest.skills, './skills/');
   assert.equal(pluginManifest.repository, 'https://github.com/imdone/product-engineering');
+});
+
+test('publishes matching Codex and Claude marketplace entries', async () => {
+  const packageManifest = JSON.parse(await read('package.json'));
+  const codexMarketplace = JSON.parse(
+    await read('.agents/plugins/marketplace.json')
+  );
+  const claudeMarketplace = JSON.parse(
+    await read('.claude-plugin/marketplace.json')
+  );
+  const codexPlugin = JSON.parse(
+    await read('plugins/product-engineering/.codex-plugin/plugin.json')
+  );
+  const claudePlugin = JSON.parse(
+    await read('plugins/product-engineering/.claude-plugin/plugin.json')
+  );
+
+  assert.equal(codexMarketplace.name, 'product-engineering');
+  assert.equal(codexMarketplace.interface.displayName, 'Product Engineering');
+  assert.equal(codexMarketplace.plugins.length, 1);
+  assert.deepEqual(codexMarketplace.plugins[0], {
+    name: 'product-engineering',
+    source: {
+      source: 'local',
+      path: './plugins/product-engineering'
+    },
+    policy: {
+      installation: 'AVAILABLE',
+      authentication: 'ON_INSTALL'
+    },
+    category: 'Productivity'
+  });
+
+  assert.equal(claudeMarketplace.name, 'product-engineering');
+  assert.equal(claudeMarketplace.plugins.length, 1);
+  assert.equal(claudeMarketplace.plugins[0].name, 'product-engineering');
+  assert.equal(
+    claudeMarketplace.plugins[0].source,
+    './plugins/product-engineering'
+  );
+
+  assert.equal(codexPlugin.name, 'product-engineering');
+  assert.equal(claudePlugin.name, codexPlugin.name);
+  assert.equal(codexPlugin.version, packageManifest.version);
+  assert.equal(claudePlugin.version, codexPlugin.version);
+  assert.equal(claudePlugin.repository, codexPlugin.repository);
+});
+
+test('uses one shared HDD skill payload for both platforms', async () => {
+  const skills = await fs.readdir(path.join(pluginRoot, 'skills'));
+  assert.deepEqual(skills, ['hypothesis-driven-development']);
 });
 
 test('preserves shared HDD workflow sections', async () => {

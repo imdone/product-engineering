@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "product-engineering",
+  "displayName": "Product Engineering",
+  "version": "0.2.0",
+  "description": "Product-engineering methods and AI skills for Hypothesis Driven Development.",
+  "author": {
+    "name": "imdone",
+    "email": "support@imdone.io",
+    "url": "https://github.com/imdone"
+  },
+  "homepage": "https://github.com/imdone/product-engineering#readme",
+  "repository": "https://github.com/imdone/product-engineering",
+  "license": "MIT",
+  "keywords": [
+    "product-engineering",
+    "hypothesis-driven-development",
+    "hdd",
+    "skills"
+  ]
+}
