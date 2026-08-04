@@ -1,0 +1,7 @@
+interface:
+  display_name: "Hypothesis Driven Development"
+  short_description: "Guide full or lightweight HDD with minimum success measures and plan checkpoints"
+  default_prompt: "Use $hypothesis-driven-development to refine a story with full or lightweight HDD, capture the minimum success measure before planning, and stop at the plan checkpoint before implementation."
+
+policy:
+  allow_implicit_invocation: true

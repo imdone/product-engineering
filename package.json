@@ -1,0 +1,40 @@
+{
+  "name": "@imdone/product-engineering",
+  "version": "0.1.0",
+  "description": "Open product-engineering methods and AI skills for hypothesis-driven development.",
+  "author": {
+    "name": "imdone",
+    "email": "support@imdone.io",
+    "url": "https://github.com/imdone"
+  },
+  "homepage": "https://github.com/imdone/product-engineering#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/imdone/product-engineering.git"
+  },
+  "bugs": {
+    "url": "https://github.com/imdone/product-engineering/issues"
+  },
+  "keywords": [
+    "product-engineering",
+    "hypothesis-driven-development",
+    "hdd",
+    "ai-skills",
+    "codex"
+  ],
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/*.test.mjs",
+    "check:parity": "node scripts/check-hdd-parity.mjs"
+  },
+  "files": [
+    "README.md",
+    "LICENSE.md",
+    "CONTRIBUTING.md",
+    "plugins",
+    "scripts",
+    "templates",
+    "examples"
+  ]
+}

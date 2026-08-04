@@ -1,0 +1,29 @@
+{
+  "name": "product-engineering",
+  "version": "0.1.0",
+  "description": "Product-engineering methods and AI skills for Hypothesis Driven Development.",
+  "author": {
+    "name": "imdone",
+    "email": "support@imdone.io",
+    "url": "https://github.com/imdone"
+  },
+  "homepage": "https://github.com/imdone/product-engineering#readme",
+  "repository": "https://github.com/imdone/product-engineering",
+  "license": "MIT",
+  "keywords": ["product-engineering", "hypothesis-driven-development", "hdd", "skills"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Product Engineering",
+    "shortDescription": "Practice Hypothesis Driven Development with or without imdone.",
+    "longDescription": "Bundles product-engineering skills and templates for defining hypotheses, success metrics, evidence paths, implementation plans, and learning loops. Uses imdone when available, while preserving a plain Markdown fallback.",
+    "developerName": "imdone",
+    "category": "Productivity",
+    "capabilities": ["Skills"],
+    "websiteURL": "https://github.com/imdone/product-engineering",
+    "defaultPrompt": [
+      "Run HDD for this story.",
+      "Turn this idea into a testable hypothesis.",
+      "Plan this slice with evidence and feedback."
+    ]
+  }
+}
