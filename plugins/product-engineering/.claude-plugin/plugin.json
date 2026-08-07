@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "product-engineering",
   "displayName": "Product Engineering",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Product-engineering methods and AI skills for Hypothesis Driven Development.",
   "author": {
     "name": "imdone",

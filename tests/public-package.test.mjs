@@ -60,6 +60,7 @@ test('uses a matching package and plugin identity', async () => {
   );
 
   assert.equal(packageManifest.name, '@imdone/product-engineering');
+  assert.equal(packageManifest.version, '0.2.1');
   assert.ok(packageManifest.files.includes('.agents'));
   assert.ok(packageManifest.files.includes('.claude-plugin'));
   assert.ok(packageManifest.files.includes('scripts'));
@@ -136,4 +137,16 @@ test('has no hard imdone dependency in public HDD markdown', async () => {
   for (const dependency of forbiddenHardDependencies) {
     assert.doesNotMatch(combined, dependency.pattern, dependency.label);
   }
+});
+
+test('preserves shared progress-note session and story-targeting contracts', async () => {
+  const skill = await fs.readFile(path.join(skillRoot, 'SKILL.md'), 'utf8');
+
+  assert.match(skill, /ask once[^\n]*session-local/i);
+  assert.match(skill, /explicit HDD or story-context launch/i);
+  assert.match(skill, /all locally available[^\n]*stories/i);
+  assert.match(skill, /Jira-style[^\n]*numeric GitHub/i);
+  assert.match(skill, /unnumbered alternatives/i);
+  assert.match(skill, /session story[^\n]*repository-global current-story/i);
+  assert.match(skill, /do not persist[^\n]*raw context[^\n]*ranking scores/i);
 });

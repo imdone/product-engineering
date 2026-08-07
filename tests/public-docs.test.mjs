@@ -41,3 +41,12 @@ test('documents independent use and public feedback', async () => {
     'https://github.com/imdone/product-engineering/issues'
   );
 });
+
+test('documents the same-change maintenance contract for shared HDD behavior', async () => {
+  const contributing = await fs.readFile(path.join(root, 'CONTRIBUTING.md'), 'utf8');
+
+  assert.match(contributing, /bundled HDD change/i);
+  assert.match(contributing, /canonical open-source[^\n]*same change/i);
+  assert.match(contributing, /public adaptation/i);
+  assert.match(contributing, /parity/i);
+});

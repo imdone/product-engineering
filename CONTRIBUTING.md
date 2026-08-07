@@ -13,6 +13,8 @@ Good contributions include clearer templates, representative examples, skill int
 
 Keep the public method usable with local Markdown. imdone may be described as an optional operational layer, but public workflow execution and tests must not require imdone commands, configuration, provider access, or proprietary source.
 
+Every bundled HDD change to shared behavior must update the canonical open-source `product-engineering` public adaptation in the same change and keep the maintainer parity contract green. Treat an in-package or vendored copy as a delivery fixture, not as evidence that this repository was updated.
+
 Before opening a pull request:
 
 ```sh
