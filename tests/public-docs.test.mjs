@@ -29,6 +29,17 @@ test('documents independent use and public feedback', async () => {
     readme,
     /claude plugin install product-engineering@product-engineering/i
   );
+  assert.match(
+    readme,
+    /npx skills add imdone\/product-engineering --skill hypothesis-driven-development/i
+  );
+  assert.match(readme, /https:\/\/skills\.sh\/b\/imdone\/product-engineering/i);
+  assert.match(
+    readme,
+    /https:\/\/skills\.sh\/imdone\/product-engineering\/hypothesis-driven-development/i
+  );
+  assert.match(readme, /https:\/\/imdone\.io/i);
+  assert.match(readme, /https:\/\/www\.npmjs\.com\/package\/imdone-cli/i);
   assert.match(readme, /github\.com\/imdone\/product-engineering\/issues/i);
   assert.match(readme, /What is HDD/i);
   assert.match(readme, /do (I|you) need imdone/i);

@@ -123,10 +123,10 @@ Before drafting or revising Design, Plan, or Implement:
 
 - Preserve completed phases.
 - Update remaining phases to match what has been learned.
-- Add a short progress note for pivots, new constraints, or eliminated risks directly to `attachments/progress-notes.md` or the local progress-note equivalent.
-- During implementation, capture user feedback, decisions, blockers, corrections, completed meaningful work, next steps, and newly learned constraints in the progress-note artifact instead of leaving them only in conversation history.
+- Add a short progress note for pivots, new constraints, or eliminated risks by trying `imdone note <issueKey> "<note>"` first. Append directly to `attachments/progress-notes.md` only if `imdone note` is unavailable or exits non-zero for the current workspace.
+- During implementation, capture user feedback, decisions, blockers, corrections, completed meaningful work, next steps, and newly learned constraints in `attachments/progress-notes.md` through `imdone note` when that command succeeds, or direct Markdown append only when `imdone note` is unavailable or fails, instead of leaving them only in conversation history.
 - Use progress notes to capture both "what changed" and "why it changed" plus what must be remembered and what should be worked on next.
-- Write the full ISO timestamp and best available author directly, so resumability includes ordering within the day.
+- Let `imdone note` add the full ISO timestamp and author when available; otherwise write the timestamp and best available author directly, so resumability includes ordering within the day.
 - Tell the user which phase changed and the new execution path.
 - Keep completed checklist items checked and leave future work unchecked.
 - If the pivot is significant, ask one alignment or comprehension question before rewriting multiple phases.
@@ -151,11 +151,11 @@ Before drafting or revising Design, Plan, or Implement:
 - Use code as documentation: prefer readable module boundaries, good function names, explicit data flow, and behavior-focused tests. Add comments only when the code cannot reasonably explain itself.
 - Keep `attachments/demo.md` current during implementation. If the built path, visible outcome, fallback behavior, or operator steps change, revise the existing demo plan instead of creating a second demo artifact.
 - If the root cause changes, update `attachments/plan.md` before continuing.
-- If the user changes direction, clarifies scope, or gives implementation feedback, update affected plan steps in `attachments/plan.md` immediately and record the changed path and reason in the progress-note artifact.
+- If the user changes direction, clarifies scope, or gives implementation feedback, update affected plan steps in `attachments/plan.md` immediately and record the changed path and reason with `imdone note` first, falling back to a direct progress-note append only if `imdone note` is unavailable or fails.
 - Add a new attachment when the implementation feedback would be hard to recover from the plan alone, such as a focused note for testing, rollout, API contract, review context, or a clarifying diagram.
 - Prefer this pattern:
   - update the affected phase tasks in `attachments/plan.md`
-  - append the old next step, new next step, status change, reason for the pivot, user feedback, discovered constraint, or warning for future resumption to `attachments/progress-notes.md` or the local equivalent
+  - run `imdone note <issueKey> "<old next step, new next step, status change, reason for the pivot, user feedback, discovered constraint, or warning for future resumption>"` first, or append that note directly to `attachments/progress-notes.md` only if `imdone note` is unavailable or fails
 - Before checking `Implement` complete, make sure `attachments/demo.md` still matches the real behavior well enough for another human or AI to show the slice without reconstructing the flow from memory.
 - Before checking `Implement` complete, run the full project test suite from the plan's final confirmation phase after focused checks and artifact-specific verification are green. If the full suite fails, treat that as implementation feedback: fix it, update the plan if the path changes, and do not check Implement complete until the full suite passes or a concrete blocker is recorded.
 - If the next unchecked item requires a real-world meeting, deployment, customer action, or other external evidence, stop local implementation at that evidence gate. Record the blocker, the required outside action, and where the resulting evidence must be captured before more boxes are checked.

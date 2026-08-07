@@ -23,13 +23,13 @@ Use this throughout the workflow.
 - Preserve clean dependency direction, but do not invent abstractions early. When a new use case creates a real axis of change, the dependency-rule refactor is part of implementation completion, not optional follow-up work.
 - Red/green/refactor and top-to-bottom task order are mandatory during implementation. Build and execute red first, evaluate each task before checking it, check it before starting the next task, and stop if the preceding executable task is still unchecked.
 - Treat `attachments/plan.md` as a live artifact. When implementation changes the path, update the plan immediately.
-- When the user provides implementation feedback, decisions, corrections, or newly discovered constraints, update affected plan steps in `attachments/plan.md` when the execution path changes, and append a chronological note to `attachments/progress-notes.md` or the local progress-note equivalent with an ISO timestamp and author when possible.
+- When the user provides implementation feedback, decisions, corrections, or newly discovered constraints, update affected plan steps in `attachments/plan.md` when the execution path changes, and record the chronological note by trying `imdone note <issueKey> "<note>"` first. Append the note directly to `attachments/progress-notes.md` with an ISO timestamp and author only if `imdone note` is unavailable or exits non-zero for the current workspace.
 - Create additional attachments when warranted for clarity and resumability, for example focused test notes, rollout notes, API notes, review context, or diagrams.
 - Use this default recording pattern:
   - update `attachments/plan.md` only when the execution path, tasks, or checklist changes
-  - append the note directly to `attachments/progress-notes.md` or the local progress-note equivalent
+  - try `imdone note <issueKey> "<note>"` first; append directly to `attachments/progress-notes.md` only if `imdone note` is unavailable or exits non-zero for the current workspace
   - include why the path changed, what feedback or constraint caused it, and what another human or AI should not have to rediscover
-  - write the full ISO timestamp and best available author directly
+  - let `imdone note` write the full ISO timestamp and author into `attachments/progress-notes.md` when available; otherwise write the timestamp and best available author directly
 - Prefer the plan over a new attachment unless the context would be hard to recover from the plan alone.
 - Periodically check shared-context fitness, especially after pivots, blocker discovery, PR creation, before checking Implement complete, and before closing the story.
 - Keep the user in the loop when the plan changes: state what changed, why it changed, and the new next step before or while editing the plan.
@@ -86,7 +86,7 @@ Formatting guidance:
 - do not replay or restate diffs in chat; rely on the tool-provided edit diff
 - follow `references/review-diff-display.md` for how to present the before/after block
 - if a progress note was recorded, say that explicitly in the user-facing message after the story footer, for example: `📝 Progress note recorded in attachments/progress-notes.md`
-- end the user-facing message with a visible indicator showing the active story key or name and a short summary. Example: `🧭 HDD | Story — Short summary`
+- end the user-facing message with a visible indicator showing the active story key, a short story summary, and the HDD skill version from `imdone --version`. Example: `🧭 HDD v0.58.2 | SCRUM-260 — Share changelog section on prompt upgrade`
 
 For Design, Plan, and major plan revisions, ask one short comprehension check before writing if the user has not already shown clear understanding.
 
@@ -115,12 +115,45 @@ If the user chooses option 1, 2, or 3:
 - end option 2 at the evaluated Plan checkpoint before product-code edits; report current pending-change status there and offer the configured keep-local or push-now choice before the normal Plan approval checkpoint
 - for option 3, resume normal review prompts after Define the Outcome is complete unless the user explicitly extends continuation
 
-## Publish And Provider-Sync Behavior
+## Sync Behavior
 
-- detect the provider only from explicit story metadata or repository context; otherwise use provider-neutral wording
-- use the repository's existing sync or publishing command only when the user requests it or has already approved that workflow
-- before running a sync command, inspect pending changes so the user understands its scope
-- if a sync conflict occurs, use the repository's documented conflict-resolution workflow and preserve story evidence
-- when no provider tool is available, record the required refresh, publication, review, or URL as an external evidence gate
-- publishing proves Deploy only when the resulting URL, version, commit, artifact, or provider-visible state is captured
-- provider sync and publication do not prove Confirm; outcome confirmation still requires measured behavior and direct user evidence
+- detect the provider from the story metadata comment before using provider-specific wording; use `jira:` or `github:` markers as the source of truth
+- Use `imdone pull` when imdone is available and the local story needs the latest provider state before continuing.
+- If imdone is unavailable, skip provider sync commands and record the needed provider refresh, publication, or review as an external evidence gate.
+- If a sync conflict occurs during `imdone push`, resolve the file conflict, then run `imdone merge` before continuing.
+- Follow `references/configuration.md` for push defaults and prompt behavior only in imdone projects.
+- Before asking whether to run `imdone push`, check `imdone agent-config get-config` and only prompt when `push.imdoneStatus.hasPendingChanges` is true. If `imdone status` reports `Nothing to push`, skip the reminder. If imdone is unavailable, do not ask for `imdone push`.
+- If push behavior is configured as `interval_prompt`, call `imdone agent-config get-config` before substantial work cycles and when deciding whether to prompt, and use `push.promptDue`, `push.elapsedMinutes`, and `push.nextPromptAt` instead of rough mental timing.
+- In `interval_prompt` mode, call `imdone agent-config record-push-prompt` every time the workflow actually asks whether to run `imdone push`, including prompts triggered by elapsed time, major checkpoints, or explicit user requests.
+- After `imdone push` succeeds, do not call an HDD-only sync timestamp setter. The `imdone push` command owns successful push sync timestamp recording; refresh state with `imdone agent-config get-config` when the workflow needs the updated timing.
+- If `attachments/plan.md` is created from placeholder content into a real plan in an imdone project, treat that as a push-worthy checkpoint in `phase_prompt` mode.
+- If a progress note is recorded in `attachments/progress-notes.md` in an imdone project, treat that as a push-worthy checkpoint in `phase_prompt` mode because resumability context changed materially.
+
+After each phase in an imdone project:
+- if `push.mode` is `phase_prompt`, ask:
+  ```text
+  Phase complete. Push changes now? (imdone push)
+  1. Yes, run imdone push
+  2. No, leave changes local
+  ```
+- after the first real plan is written and `push.mode` is `phase_prompt`, ask:
+  ```text
+  Plan updated. Push changes now? (imdone push)
+  1. Yes, run imdone push
+  2. No, leave changes local
+  ```
+- after a progress note is recorded and `push.mode` is `phase_prompt`, ask:
+  ```text
+  Progress note recorded. Push changes now? (imdone push)
+  1. Yes, run imdone push
+  2. No, leave changes local
+  ```
+- if `push.mode` is `interval_prompt` and `push.promptDue` is true, ask:
+  ```text
+  Phase complete and the push interval has elapsed. Push changes now? (imdone push)
+  1. Yes, run imdone push
+  2. No, leave changes local
+  ```
+- if `push.mode` is `interval_prompt` and `push.promptDue` is false, do not ask to push yet; if `imdone status` is clean, say nothing about pushing
+
+If the user chooses yes, run `imdone push`, then call `imdone agent-config get-config` if the workflow needs refreshed timing. If no, leave the interval overdue state intact and remind the user to push before ending the session. If imdone is unavailable, skip this push prompt behavior entirely.

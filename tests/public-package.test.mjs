@@ -33,6 +33,7 @@ async function markdownFiles(directory) {
 test('ships the required public package and plugin files', async () => {
   const requiredFiles = [
     'README.md',
+    'CHANGELOG.md',
     'LICENSE.md',
     'CONTRIBUTING.md',
     '.agents/plugins/marketplace.json',

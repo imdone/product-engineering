@@ -5,15 +5,16 @@ description: Guide a story through hypothesis-driven development from user-confi
 
 # Hypothesis-Driven Development
 
-## Tool-Neutral Boundary
+## Tool Availability Boundary
 
-HDD works from story files and durable artifacts in the user's workspace. Do not require a particular issue tracker, provider CLI, or project-management product.
+Use imdone only after deterministic command checks:
+- run `imdone --version`; if it exits 0, the `imdone` command is installed
+- run `imdone agent-config get-config`; if it exits 0 with `status: "ok"`, the current workspace is an imdone project for HDD session state and push reminder settings
+- try `imdone note <issueKey> "<note>"` for timestamped progress notes; use the direct Markdown fallback only if `imdone note` is unavailable or exits non-zero for the current workspace
+- use `imdone-template` when a local issue needs the HDD template
+- use `imdone pull`, `imdone push`, and `imdone status` for provider sync when the user chooses to sync
 
-- store current state in the issue/story file and linked attachments when they exist
-- record chronological notes directly in `attachments/progress-notes.md` or the repository's local progress-note equivalent
-- when a team already uses imdone, `imdone note <issueKey> "<note>"` is an optional shortcut for the same chronological record; it is never required
-- use repository-native templates and provider sync tools only when the user asks and the workspace already supports them
-- describe publishing, provider sync, reviews, and other outside actions as external evidence gates when they cannot be completed locally
+Do not depend on imdone. If the deterministic checks fail, continue the HDD workflow with plain Markdown files in the user's workspace. Store story state in the issue/story file and attachments when they exist, append progress notes directly to `attachments/progress-notes.md` with an ISO timestamp and author when possible only if `imdone note` is unavailable or fails, skip imdone push reminders, and describe sync/publish steps as external evidence gates instead of blocking local HDD work.
 
 ## Operating Model
 
@@ -36,9 +37,9 @@ Purpose:
 - require top-to-bottom implementation: build and execute the red step first, evaluate each markdown task as done before checking it, and do not start the next task while the preceding executable task is unchecked
 - once the plan is accepted, keep implementing until the whole plan is done; do not stop between planned tasks just to ask whether to continue, summarize status, or re-confirm the already-approved direction
 - capture implementation feedback in story artifacts so humans and AI can regain context after interruptions
-- when decisions, blockers, corrections, completed meaningful work, or next steps happen during a session, record a concise progress note in the story's progress-note artifact so the story can guide what should be worked on next
+- when decisions, blockers, corrections, completed meaningful work, or next steps happen during a session, record a concise progress note with `imdone note <issueKey> "<note>"` when available so the story can guide what should be worked on next
 - make evidence-bearing progress notes use a tiny lab-notebook shape when possible: `Observation: <what I saw>`, `Evidence: <test count / captured response / command output / commit>`, `Decision: <what we're doing about it, and why over the alternative>`, and `Next: <what the next person should do / trust>`
-- make `attachments/progress-notes.md` or the local equivalent the default place to record pivots and corrections, using `attachments/plan.md` only for the execution plan and task checklist
+- make `attachments/progress-notes.md` the default place to record pivots and corrections, trying `imdone note` first and appending directly to the Markdown file only if `imdone note` is unavailable or fails, using `attachments/plan.md` only for the execution plan and task checklist
 - treat `attachments/demo.md` as a single evolving proof artifact: define it early, then revise it during implementation when the real behavior, commands, or visible outcomes change
 
 Non-goals:
@@ -52,9 +53,9 @@ Before doing workflow work:
 
 1. Read `references/session-setup.md`.
 2. Resolve the story, then load the current story, progress notes, attachment links, and only the artifacts needed for the selected mode and current step.
-3. Resolve workspace conventions from `references/session-setup.md`: story location, attachment layout, progress-note artifact, templates, and any user-requested provider sync boundary.
+3. Run the deterministic imdone checks in `references/session-setup.md`. If `imdone agent-config get-config` exits 0 with `status: "ok"`, read HDD skill state from that result. If `push.status` is `missing`, prompt the user for push reminder preferences using the short setup in `references/configuration.md`, then persist the answer with `imdone agent-config set-push-config` before continuing. After push config exists, call `imdone agent-config begin-session` so interval timing starts from the current HDD session. For prompt-reminder config, push timing state, and `active_story` reads and writes in an imdone project, always use `imdone agent-config` instead of local helper scripts or direct YAML edits. If the deterministic checks fail, skip push reminder setup and keep session state in the current Markdown artifacts.
 4. Ask the engineer to choose full or lightweight HDD as soon as the story is resolved and the story, progress notes, and attachment links are read, before applying or repairing any HDD template and before doing workflow artifact or phase work. Use the exact numbered prompt in `references/session-setup.md` unless the engineer already made an explicit mode choice in the current conversation.
-5. Handle templates by selected mode using `references/session-setup.md`: full HDD applies or repairs the full HDD template when needed; lightweight HDD templates are optional and used only when the engineer asks or one is already present. Use the full HDD expected headings for full mode, and keep lightweight HDD sparse around Problem, Current Plan, and the Progress notes attachment.
+5. Handle templates by selected mode using `references/session-setup.md`: full HDD applies or repairs the full HDD template when needed; lightweight HDD templates are optional and used only when the engineer asks or one is already present. If imdone is unavailable, use the full HDD expected headings for full mode, and keep lightweight HDD sparse around Problem, Current Plan, and the Progress notes attachment.
 6. Make sure the issue file links to every issue attachment that exists so artifacts are easy to find from the story. If the template already includes a link, leave it where it is. Duplicate links are acceptable.
 7. Read `references/interaction-contract.md` and follow it throughout the session.
 
@@ -68,7 +69,7 @@ Provider detection rule:
 - the draft -> confirm -> write loop
 - question style and pacing
 - when to ask comprehension or critical questions
-- publish and provider-sync behavior
+- push and pull behavior
 - external-evidence gates
 - plan freshness and shared-context checks
 - how to handle blocked stories
@@ -114,7 +115,7 @@ Order:
 Write locations:
 - Design: `attachments/design.md` and at least one Mermaid diagram in `attachments/diagram.md`
 - Plan: `attachments/plan.md` using explicit red/green/refactor sequencing
-- Progress notes from feedback, pivots, and discovered constraints: append to `attachments/progress-notes.md` or the local equivalent with an ISO timestamp and author when possible. For evidence-bearing notes, use Observation, Evidence, Decision, and Next. Read legacy `Progress notes:` in `attachments/plan.md` only as backward-compatible context.
+- Progress notes from feedback, pivots, and discovered constraints: try `imdone note <issueKey> "<note>"` into `attachments/progress-notes.md` first; append directly to `attachments/progress-notes.md` with an ISO timestamp and author only if `imdone note` is unavailable or exits non-zero for the current workspace. For evidence-bearing notes, use Observation, Evidence, Decision, and Next. Read legacy `Progress notes:` in `attachments/plan.md` only as backward-compatible context.
 
 Load `references/prove-the-outcome.md` only when working this phase.
 Use it for implementation hygiene guidance, including DRY cleanup in touched flows and code-as-documentation defaults.
@@ -155,6 +156,7 @@ Load `references/confirm-the-outcome.md` only when working this phase.
 
 Load only the reference file needed for the current decision:
 - setup and attachment rules: `references/session-setup.md`
+- skill config and smart defaults: `references/configuration.md`
 - Define Outcome workflow: `references/define-the-outcome.md`
 - Prove Outcome workflow: `references/prove-the-outcome.md`
 - Deploy Outcome workflow: `references/deploy-the-outcome.md`
@@ -189,19 +191,21 @@ Load only the reference file needed for the current decision:
 - Only run provider sync or publishing commands when the user requests them or has already approved that workflow; otherwise record the exact external evidence gate.
 - Do not mark Hypothesis complete until `## Problem Framing` exists and the user has provided or confirmed it during the HDD session.
 - After Hypothesis is complete, ask once whether to continue through the remaining HDD workflow without routine per-artifact interruption. Respect the chosen continuation scope until a blocker, missing decision, external evidence gate, major pivot, push prompt, or user correction requires stopping.
-- When the session-local continuation-through-Plan scope is selected, `references/interaction-contract.md` overrides routine review timing: defer routine per-artifact review until the evaluated Plan checkpoint. Do not defer explicit user-requested publishing or sync, blockers, missing decisions, external evidence gates, major pivots, user corrections, required tool approvals, or failed evaluators.
+- When the session-local continuation-through-Plan scope is selected, `references/interaction-contract.md` overrides routine review and push timing: defer routine per-artifact review and routine phase/progress-note push prompts until the evaluated Plan checkpoint. Do not defer explicit user-requested pushes, blockers, missing decisions, external evidence gates, major pivots, user corrections, required tool approvals, or failed evaluators.
 - Every HDD user-facing question must include numbered answer choices so the user can reply with a number alone. Use a numbered free-form option when the user may need to correct the framing or provide custom details.
-- End each user-facing HDD message with a visible indicator showing the active story key or name and a short summary, for example: `🧭 HDD | Story — Short summary`.
+- In `interval_prompt` mode inside an imdone project, check push timing through `imdone agent-config get-config` before starting any substantial read, edit, verification, or implementation cycle, not only at phase boundaries. Treat `push.promptDue` as already gated by elapsed interval and pending `imdone status` changes.
+- When using this skill in an imdone project, end each user-facing message with a visible indicator showing the active story key, a short story summary, and the HDD skill version from `imdone --version`. When imdone is unavailable, use the visible indicator without an imdone version, for example: `🧭 HDD | Story — Short summary`
 - When progress notes are recorded, explicitly say so in the user-facing message after the story footer, using a visible indicator such as: `📝 Progress note recorded in attachments/progress-notes.md`
 - Rely on the tool's built-in edit diff. In chat, list changed file paths and summarize the change instead of replaying diffs.
 - Default recording pattern for pivots and corrections:
   - update the affected phase steps in `attachments/plan.md`
-  - append a short progress note to the local progress-note artifact for decisions, blockers, corrections, completed meaningful work, next steps, what changed, why it changed, and what must be remembered; when the note carries evidence, use Observation, Evidence, Decision, and Next
-  - include the best available author and a full ISO timestamp
+  - record a short progress note with `imdone note <issueKey> "<note>"` first; append directly to `attachments/progress-notes.md` only if `imdone note` is unavailable or fails, for decisions, blockers, corrections, completed meaningful work, next steps, what changed, why it changed, and what must be remembered; when the note carries evidence, use Observation, Evidence, Decision, and Next
+  - let `imdone note` add the author and full ISO timestamp when available; otherwise include the best available author and a full ISO timestamp in the Markdown note
   - add a new attachment only when the plan is no longer enough to recover the reasoning or boundary cleanly
 - No supported skill alias field was found in the current local skill format, so keep the canonical skill name `hypothesis-driven-development` unless alias support is added to the skill loader.
 - If the next honest step is outside the tool boundary, record the unblock note or evidence gate instead of pretending the story can advance locally.
-- Treat provider issue creation and sync as serialized repository operations unless the selected tool explicitly proves concurrent creation is safe for local state, attachment upload, and issue refresh.
+- In `phase_prompt` push mode inside an imdone project, prompt for `imdone push` after the first real write to `attachments/plan.md` and again after any progress note is recorded in `attachments/progress-notes.md`, not only at the end of a phase. While the session-local continuation-through-Plan scope is active, defer those routine prompts until the evaluated Plan checkpoint. If imdone is unavailable, skip push prompts.
+- If a follow-on step involves creating issues with `imdone add` or the `imdone-add` skill, treat creation as a serialized repo operation. Do not run multiple `imdone add` commands in parallel in the same repo unless a later implementation explicitly proves that concurrent create flows are safe for git state, attachment upload, and local issue refresh.
 - During Phase 2, do not draft Design, Plan, or Implement artifacts from only the active story. First load the relevant expert reference, then search current backlog stories and the configured archive for similar hypotheses, acceptance criteria, plans, or outcomes. Summarize only the useful prior context; do not bulk-load unrelated archived work.
 - If Deploy depends on external validation, stop at the evidence gate and record the blocker instead of checking progress beyond honest evidence.
 - Before checking Implement complete, run the full project test suite from the plan's final confirmation phase after all focused checks are green. If the full suite fails, fix the failure or record a concrete blocker and leave Implement unchecked.

@@ -2,6 +2,8 @@
 
 Open methods, templates, and AI skills for building software as a learning process.
 
+[![skills.sh](https://skills.sh/b/imdone/product-engineering)](https://skills.sh/imdone/product-engineering/hypothesis-driven-development)
+
 The first included method is Hypothesis Driven Development (HDD): frame the problem, state what you believe will improve, deliver the smallest end-to-end slice, capture evidence, deploy it, and confirm whether the outcome happened.
 
 You can practice HDD without imdone. The public skill works with Markdown files and the issue tracker, editor, or AI coding agent you already use.
@@ -32,6 +34,14 @@ codex plugin add product-engineering@product-engineering
 claude plugin marketplace add imdone/product-engineering
 claude plugin install product-engineering@product-engineering
 ```
+
+### skills.sh
+
+```sh
+npx skills add imdone/product-engineering --skill hypothesis-driven-development
+```
+
+The first public install makes the skill eligible for automatic skills.sh listing through anonymous aggregate install telemetry. Browse the skill at [skills.sh/imdone/product-engineering/hypothesis-driven-development](https://skills.sh/imdone/product-engineering/hypothesis-driven-development).
 
 Then ask your coding agent:
 
@@ -68,7 +78,9 @@ Full HDD fits ambiguous, high-risk, cross-team, or implementation-heavy work. Li
 
 HDD is the method. imdone is an optional operational layer for teams that want the story, attachments, chronological notes, and Jira or GitHub state synchronized as shared working memory.
 
-The public method records progress directly in local Markdown. Teams already using imdone can use `imdone note` as a convenient bridge, but no imdone command, account, or project configuration is required.
+If you want that operational layer, learn more at [imdone.io](https://imdone.io) or install the [imdone CLI from npm](https://www.npmjs.com/package/imdone-cli).
+
+The public skill checks whether imdone is installed and whether the current workspace supports its project features. When those deterministic checks pass, it uses imdone for session state, progress notes, templates, and user-approved provider sync; in particular, it tries `imdone note` before writing a progress note directly. If imdone is absent or a command fails, HDD continues with local Markdown and external evidence gates. No imdone command, account, or project configuration is required to practice the method.
 
 ## Feedback And Contributions
 
@@ -101,4 +113,4 @@ npm run check:parity -- \
   --target ./plugins/product-engineering/skills/hypothesis-driven-development
 ```
 
-This maintainer check compares shared workflow contracts and rejects hard imdone dependencies. The published package and its normal `npm test` run do not require the proprietary repository.
+This maintainer check compares shared workflow contracts, guarded optional-imdone integrations, and their tool-neutral fallbacks. It rejects only hard or unguarded imdone dependencies. The published package and its normal `npm test` run do not require the proprietary repository.

@@ -19,6 +19,7 @@ export const requiredSharedFiles = [
   'agents/openai.yaml',
   'references/acceptance-criteria.md',
   'references/changelog-style-guide.md',
+  'references/configuration.md',
   'references/confirm-the-outcome.md',
   'references/define-the-outcome.md',
   'references/dependency-direction-rule.md',
@@ -43,11 +44,18 @@ export const requiredSharedFiles = [
 ];
 
 export const forbiddenHardDependencies = [
-  { label: 'imdone agent config', pattern: /imdone agent-config/i },
-  { label: 'imdone provider pull', pattern: /imdone pull/i },
-  { label: 'imdone provider push', pattern: /imdone push/i },
-  { label: 'imdone template command', pattern: /imdone-template|imdone template/i },
-  { label: 'imdone push state', pattern: /push\.mode|push\.promptDue|hasPendingChanges/i }
+  {
+    label: 'mandatory imdone installation or configuration',
+    pattern: /(?:require|requires|required)\s+(?:the\s+)?`?imdone(?:-cli)?`?\s+(?:to be\s+)?(?:installed|configured|available)/i
+  },
+  {
+    label: 'mandatory imdone setup or execution',
+    pattern: /\bmust\s+(?:install|configure|initialize|use|run)\s+`?imdone\b/i
+  },
+  {
+    label: 'workflow blocked when imdone is unavailable',
+    pattern: /(?:stop|block|abort)[^\n]{0,80}(?:if|when)[^\n]{0,40}imdone[^\n]{0,40}(?:unavailable|missing|fails)/i
+  }
 ];
 
 function readOption(name) {
@@ -118,5 +126,5 @@ if (fileURLToPath(import.meta.url) === path.resolve(process.argv[1])) {
     console.error(errors.map((error) => '- ' + error).join('\n'));
     process.exit(1);
   }
-  console.log('OK: public HDD adaptation preserves shared workflow contracts without hard imdone dependencies.');
+  console.log('OK: public HDD adaptation preserves shared workflow contracts, guarded imdone integrations, and tool-neutral fallbacks.');
 }
