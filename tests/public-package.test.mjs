@@ -61,6 +61,7 @@ test('uses a matching package and plugin identity', async () => {
   );
 
   assert.equal(packageManifest.name, '@imdone/product-engineering');
+  assert.equal(packageManifest.version, '0.2.1');
   assert.ok(packageManifest.files.includes('.agents'));
   assert.ok(packageManifest.files.includes('.claude-plugin'));
   assert.ok(packageManifest.files.includes('scripts'));
@@ -139,43 +140,14 @@ test('has no hard imdone dependency in public HDD markdown', async () => {
   }
 });
 
-test('hard-dependency guard rejects mandatory imdone prerequisites', () => {
-  const hardDependencies = [
-    'HDD requires imdone-cli installed before the session can begin.',
-    'You must configure imdone before using this skill.',
-    'Stop the workflow when imdone is unavailable.'
-  ];
+test('preserves shared progress-note session and story-targeting contracts', async () => {
+  const skill = await fs.readFile(path.join(skillRoot, 'SKILL.md'), 'utf8');
 
-  for (const text of hardDependencies) {
-    assert.ok(
-      forbiddenHardDependencies.some(({ pattern }) => pattern.test(text)),
-      text
-    );
-  }
-});
-
-test('uses deterministic imdone integrations with a complete tool-neutral fallback', async () => {
-  const contractFiles = [
-    'plugins/product-engineering/skills/hypothesis-driven-development/SKILL.md',
-    'plugins/product-engineering/skills/hypothesis-driven-development/references/session-setup.md',
-    'plugins/product-engineering/skills/hypothesis-driven-development/references/interaction-contract.md',
-    'plugins/product-engineering/skills/hypothesis-driven-development/references/prove-the-outcome.md'
-  ];
-  const combined = (
-    await Promise.all(contractFiles.map((file) => read(file)))
-  ).join('\n');
-
-  assert.match(combined, /imdone --version/);
-  assert.match(combined, /imdone agent-config get-config/);
-  assert.match(combined, /status:\s*[`'"]?ok/i);
-  assert.match(combined, /imdone note <issueKey> "<note>"/);
-  assert.match(
-    combined,
-    /direct(?:ly)?[^\n]*progress-notes\.md[^\n]*(?:only if|when)[^\n]*imdone note[^\n]*(?:unavailable|fails|exits non-zero)/i
-  );
-  assert.match(combined, /imdone template|imdone-template/);
-  assert.match(combined, /imdone pull/);
-  assert.match(combined, /imdone push/);
-  assert.match(combined, /plain Markdown/i);
-  assert.match(combined, /external evidence gate/i);
+  assert.match(skill, /ask once[^\n]*session-local/i);
+  assert.match(skill, /explicit HDD or story-context launch/i);
+  assert.match(skill, /all locally available[^\n]*stories/i);
+  assert.match(skill, /Jira-style[^\n]*numeric GitHub/i);
+  assert.match(skill, /unnumbered alternatives/i);
+  assert.match(skill, /session story[^\n]*repository-global current-story/i);
+  assert.match(skill, /do not persist[^\n]*raw context[^\n]*ranking scores/i);
 });

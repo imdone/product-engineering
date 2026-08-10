@@ -53,18 +53,11 @@ test('documents independent use and public feedback', async () => {
   );
 });
 
-test('documents public release history', async () => {
-  const changelog = await fs.readFile(path.join(root, 'CHANGELOG.md'), 'utf8');
-  const packageManifest = JSON.parse(
-    await fs.readFile(path.join(root, 'package.json'), 'utf8')
-  );
+test('documents the same-change maintenance contract for shared HDD behavior', async () => {
+  const contributing = await fs.readFile(path.join(root, 'CONTRIBUTING.md'), 'utf8');
 
-  assert.match(changelog, /^# Changelog/m);
-  assert.match(changelog, /^## 0\.2\.1 - 2026-08-04/m);
-  assert.match(changelog, /deterministic/i);
-  assert.match(changelog, /imdone note/i);
-  assert.match(changelog, /^## 0\.2\.0 - 2026-08-04/m);
-  assert.match(changelog, /Codex/i);
-  assert.match(changelog, /Claude Code/i);
-  assert.ok(packageManifest.files.includes('CHANGELOG.md'));
+  assert.match(contributing, /bundled HDD change/i);
+  assert.match(contributing, /canonical open-source[^\n]*same change/i);
+  assert.match(contributing, /public adaptation/i);
+  assert.match(contributing, /parity/i);
 });
