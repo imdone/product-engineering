@@ -40,6 +40,16 @@ Use this throughout the workflow.
 - When a checklist item is not applicable, preserve it visibly by striking through the item text rather than silently leaving it open or marking it complete.
 - If an HDD-templated story is out of date relative to the current bundled format, tell the user what is misaligned and repair that structure with them before advancing the workflow item order.
 
+## Progress-Note Target Confirmation
+
+When HDD asks where to record a progress note:
+
+- Every displayed target or alternative includes the issue key and a human-readable story title or concise description. Use the stable `KEY: human-readable story title` display form.
+- Never present a locally resolvable target as a bare issue key. Resolve its title from local story metadata before asking, so the contributor does not need to remember what the key means.
+- Keep the issue key as the target identity. The title or description is presentation-only: do not persist it in lifecycle records, use it to change session or repository-global story state, or split the confirmation into multiple pending questions.
+
+Example: `Record this progress note on SCRUM-416: Increase durable story context with event-triggered evidence notes?`
+
 ## Lightweight Mode And Plan Checkpoint
 
 Lightweight mode is selected as soon as the story is resolved and the story, progress notes, and attachment links are read, before applying or repairing any HDD template and before doing workflow artifact or phase work. It is not first introduced after planning. Ask for full or lightweight HDD with the numbered prompt from `references/session-setup.md` unless the engineer already made an explicit mode choice in the current conversation. Use lightweight mode only when the engineer explicitly chooses it for low-risk work. Recommend full HDD for high-risk, ambiguous, cross-team, or provider-sync-sensitive work unless the engineer explicitly chooses otherwise.
