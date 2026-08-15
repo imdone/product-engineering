@@ -1,9 +1,10 @@
 # Changelog
 
-## Unreleased
+## 0.2.2 - 2026-08-15
 
 ### Changed
 
+- Require progress-note target confirmations and alternatives to show both the issue key and a human-readable title or concise description instead of a bare key.
 - Linked the optional imdone operational layer to imdone.io and the imdone-cli npm package from the public README.
 
 ## 0.2.1 - 2026-08-04

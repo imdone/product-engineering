@@ -61,7 +61,7 @@ test('uses a matching package and plugin identity', async () => {
   );
 
   assert.equal(packageManifest.name, '@imdone/product-engineering');
-  assert.equal(packageManifest.version, '0.2.1');
+  assert.equal(packageManifest.version, '0.2.2');
   assert.ok(packageManifest.files.includes('.agents'));
   assert.ok(packageManifest.files.includes('.claude-plugin'));
   assert.ok(packageManifest.files.includes('scripts'));
@@ -150,4 +150,19 @@ test('preserves shared progress-note session and story-targeting contracts', asy
   assert.match(skill, /unnumbered alternatives/i);
   assert.match(skill, /session story[^\n]*repository-global current-story/i);
   assert.match(skill, /do not persist[^\n]*raw context[^\n]*ranking scores/i);
+});
+
+test('identifies every progress-note target with a human-readable story title', async () => {
+  const contract = await fs.readFile(
+    path.join(skillRoot, 'references/interaction-contract.md'),
+    'utf8'
+  );
+
+  assert.match(contract, /progress-note target confirmation/i);
+  assert.match(
+    contract,
+    /every displayed (?:target|alternative)[^\n]*issue key[^\n]*(?:story title|concise description)/i
+  );
+  assert.match(contract, /KEY: human-readable story title/i);
+  assert.match(contract, /never[^\n]*bare issue key/i);
 });
