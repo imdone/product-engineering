@@ -38,6 +38,7 @@ export const requiredSharedFiles = [
   'references/solving-the-shared-context-problem.md',
   'references/vertical-slicing-experts.md',
   'scripts/bundle_hdd_feedback.mjs',
+  'scripts/detect_hdd_mode.mjs',
   'scripts/evaluate_hdd_plan.mjs',
   'scripts/evaluate_hdd_skill.mjs',
   'scripts/evaluate_progress_notes_contract.mjs'

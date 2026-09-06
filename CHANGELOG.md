@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.4 - 2026-09-06
+
+### Changed
+
+- Infer Full or Lightweight HDD from saved closing template metadata before asking for mode, and route enabled event-triggered notes to the retained HDD session story without a redundant target question while preserving explicit note-only redirects and fail-closed correlation.
+
 ## 0.2.3 - 2026-09-05
 
 ### Changed
