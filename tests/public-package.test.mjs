@@ -61,7 +61,7 @@ test('uses a matching package and plugin identity', async () => {
   );
 
   assert.equal(packageManifest.name, '@imdone/product-engineering');
-  assert.equal(packageManifest.version, '0.2.2');
+  assert.equal(packageManifest.version, '0.2.3');
   assert.ok(packageManifest.files.includes('.agents'));
   assert.ok(packageManifest.files.includes('.claude-plugin'));
   assert.ok(packageManifest.files.includes('scripts'));
@@ -140,15 +140,24 @@ test('has no hard imdone dependency in public HDD markdown', async () => {
   }
 });
 
-test('preserves shared progress-note session and story-targeting contracts', async () => {
+test('preserves explicit-HDD-session progress-note and current-first targeting contracts', async () => {
   const skill = await fs.readFile(path.join(skillRoot, 'SKILL.md'), 'utf8');
 
-  assert.match(skill, /ask once[^\n]*session-local/i);
-  assert.match(skill, /explicit HDD or story-context launch/i);
-  assert.match(skill, /all locally available[^\n]*stories/i);
-  assert.match(skill, /Jira-style[^\n]*numeric GitHub/i);
-  assert.match(skill, /unnumbered alternatives/i);
-  assert.match(skill, /session story[^\n]*repository-global current-story/i);
+  assert.match(skill, /#HDD-template.*#HDD-light-template/is);
+  assert.match(skill, /imdone-session-story:v1/i);
+  assert.match(skill, /imdone-story-context:v1/i);
+  assert.match(skill, /hddProgressNotes:enabled/i);
+  assert.match(skill, /accepted[^\n]*persist[^\n]*story metadata/i);
+  assert.match(skill, /decline[^\n]*unrecognized[^\n]*session/i);
+  assert.match(skill, /activation[^\n]*detection[^\n]*require[^\n]*using this HDD skill[^\n]*imdone-session-story:v1/i);
+  assert.match(skill, /story tags[^\n]*hddProgressNotes:enabled[^\n]*do not activate[^\n]*direct-agent/i);
+  assert.match(skill, /imdone ai[^\n]*stays quiet[^\n]*session-story marker[^\n]*imdone-story-context:v1[^\n]*takes precedence/i);
+  assert.match(skill, /current story[^\n]*first/i);
+  assert.match(skill, /one[^\n]*HDD-eligible alternative/i);
+  assert.match(skill, /Jira keys[^\n]*numeric GitHub/i);
+  assert.match(skill, /sessionStoryKey[^\n]*active_story/i);
+  assert.match(skill, /imdone status <sessionStoryKey> -f json/i);
+  assert.match(skill, /imdone push <sessionStoryKey>/i);
   assert.match(skill, /do not persist[^\n]*raw context[^\n]*ranking scores/i);
 });
 
