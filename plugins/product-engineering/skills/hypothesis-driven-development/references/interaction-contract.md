@@ -40,9 +40,16 @@ Use this throughout the workflow.
 - When a checklist item is not applicable, preserve it visibly by striking through the item text rather than silently leaving it open or marking it complete.
 - If an HDD-templated story is out of date relative to the current bundled format, tell the user what is misaligned and repair that structure with them before advancing the workflow item order.
 
-## Progress-Note Target Confirmation
+## Progress-Note Target Resolution
 
-When HDD asks where to record a progress note:
+In an enabled marked HDD session:
+
+- Treat the retained `sessionStoryKey` as the authoritative default note target.
+- Confirm it through the correlated event lifecycle and proceed to the note writer without asking which story should receive the note.
+- Treat a locally resolvable Jira key or numeric GitHub issue explicitly named as a note-only redirect as confirmation for that event only. Do not change `sessionStoryKey`, agent `active_story`, or global `imdone current` state.
+- If automatic confirmation fails or the retained story cannot be resolved, fail closed. Do not call `imdone note` until the bounded recovery path confirms a target.
+
+When HDD must show the recovery prompt:
 
 - Every displayed target or alternative includes the issue key and a human-readable story title or concise description. Use the stable `KEY: human-readable story title` display form.
 - Never present a locally resolvable target as a bare issue key. Resolve its title from local story metadata before asking, so the contributor does not need to remember what the key means.
@@ -52,7 +59,7 @@ Example: `Record this progress note on SCRUM-416: Increase durable story context
 
 ## Lightweight Mode And Plan Checkpoint
 
-Lightweight mode is selected as soon as the story is resolved and the story, progress notes, and attachment links are read, before applying or repairing any HDD template and before doing workflow artifact or phase work. It is not first introduced after planning. Ask for full or lightweight HDD with the numbered prompt from `references/session-setup.md` unless the engineer already made an explicit mode choice in the current conversation. Use lightweight mode only when the engineer explicitly chooses it for low-risk work. Recommend full HDD for high-risk, ambiguous, cross-team, or provider-sync-sensitive work unless the engineer explicitly chooses otherwise.
+Lightweight mode is resolved during story triage/Define, as soon as the story, progress notes, and attachment links are read, before applying or repairing any HDD template and before doing workflow artifact or phase work. It is not first introduced after planning. Preserve an explicit current-conversation choice; otherwise apply the closing-metadata inference and fallback prompt rules owned by `references/session-setup.md`. When mode remains undecided, recommend full HDD for high-risk, ambiguous, cross-team, or provider-sync-sensitive work.
 
 Before writing the plan in lightweight mode, capture the minimum success measure: observable outcome, feedback path, and evidence/data-capture mechanism. The plan must point at that outcome instead of task completion alone. Before plan approval, also capture a compact lightweight planning context: first boundary/module to touch, independent phases or coupled sources, main failure mode, constraints / what must not change, and evidence/output expectations. Keep this lightweight planning context short enough to prevent rediscovery without forcing a full design document or becoming full HDD. Keep lightweight mode context efficient: load only the current story, progress notes, minimum outcome fields, compact planning context, current plan, and the current-step artifact. Treat full-HDD-only artifacts such as full design/demo/success-metrics/dod as on-demand context, and load them only when the selected lightweight step requires them.
 
