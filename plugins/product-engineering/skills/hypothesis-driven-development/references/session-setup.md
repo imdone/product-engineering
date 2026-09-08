@@ -4,7 +4,7 @@ Use this before the first workflow artifact is drafted.
 
 ## Initial Read
 
-Before choosing full or lightweight HDD, read the story, progress notes, and attachment links. Then defer every other artifact until the selected mode and current step require it. Do not bulk-load full-HDD-only context during initial setup.
+Before resolving full or lightweight HDD, read the story, progress notes, and attachment links. Then defer every other artifact until the resolved mode and current step require it. Do not bulk-load full-HDD-only context during initial setup.
 
 ## Full HDD Artifact Map
 
@@ -63,9 +63,19 @@ If no issue key is provided:
 After the story is confirmed, read the story, progress notes, and attachment links before asking anything. Then load only the artifacts needed for the selected mode and current step.
 After the story is confirmed in an imdone project, call `imdone agent-config set-active-story --key <issueKey>` so the next no-key HDD session can resume that story. If imdone is unavailable, rely on the conversation and local Markdown paths for resumption.
 
-## Choose Full Or Lightweight HDD
+## Resolve Full Or Lightweight HDD
 
-Ask the engineer to choose full or lightweight HDD as soon as the story is resolved and the story, progress notes, and attachment links are read. This prompt happens before applying or repairing any HDD template, before template repair, and before doing workflow artifact or phase work. Skip it only when the engineer already made an explicit full/lightweight mode choice in the current conversation.
+Resolve mode during story triage/Define, as soon as the story, progress notes, and attachment links are read. This happens before applying or repairing any HDD template, before template repair, and before doing workflow artifact or phase work.
+
+Use an explicit Full or Lightweight HDD choice from the current conversation when one exists. Otherwise run `node <skill-root>/scripts/detect_hdd_mode.mjs <issue-file>` when the script is available, or apply the same closing-metadata rules directly:
+
+- `imdoneTemplate` values containing `lightweight_hypothesis_driven_development`, or `#HDD-light-template`, select Lightweight HDD.
+- `imdoneTemplate` values containing `hypothesis_driven_development` without `lightweight`, or a standalone `#HDD-template`, select Full HDD.
+- A lightweight marker wins over its legacy companion full tag when both `#HDD-light-template` and `#HDD-template` are present.
+- Body mentions do not select a mode; inspect only the closing HTML metadata comment.
+- Conflicting explicit `imdoneTemplate` identities return `ask` instead of guessing.
+
+Continue with the inferred mode without asking the engineer to repeat the saved story decision. Ask the numbered choice below only when metadata is missing, conflicting, or cannot be inferred safely and the engineer has not already chosen a mode in the current conversation.
 
 Use this numbered prompt:
 
@@ -92,7 +102,7 @@ Use the issue file as the attachment index for issue attachments:
 - duplicate links are acceptable when adding a missing link is simpler than normalizing existing ones
 - keep links current when attachment names change or when new focused attachments are added for clarity
 
-After the full or lightweight HDD choice is made, handle templates by mode:
+After full or lightweight HDD is resolved, handle templates by mode:
 - for full HDD, detect this by the absence of `#HDD-template` in the issue content or by obviously missing full HDD template structure
 - if full HDD was selected, apply template `hypothesis_driven_development` when it exists locally; otherwise apply `stock_hypothesis_driven_development`
 - lightweight HDD does not require applying a template. If the story already has `#HDD-light-template`, work with it. If the engineer asks for a lightweight template, apply `lightweight_hypothesis_driven_development` when it exists locally; otherwise apply `stock_lightweight_hypothesis_driven_development`. Otherwise continue lightweight HDD without requiring a template by maintaining the core problem/current-plan/progress-notes contract in the issue and attachments.
