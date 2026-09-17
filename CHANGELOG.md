@@ -1,10 +1,11 @@
 # Changelog
 
-## 0.2.4 - 2026-09-06
+## 0.2.4 - 2026-09-08
 
 ### Changed
 
-- Infer Full or Lightweight HDD from saved closing template metadata before asking for mode, and route enabled event-triggered notes to the retained HDD session story without a redundant target question while preserving explicit note-only redirects and fail-closed correlation.
+- Enable event-triggered progress-note capture without a separate consent prompt when users explicitly request Full or Lightweight HDD or `imdone-ai`, or launch through `imdone hdd` or `imdone ai`; explicit opt-out wins and all other sessions stay capture-off.
+- Infer saved Full or Lightweight HDD mode from closing story metadata and automatically confirm the retained session story for ordinary progress notes while preserving explicit note-only redirects and fail-closed recovery.
 
 ## 0.2.3 - 2026-09-05
 

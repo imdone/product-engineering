@@ -147,9 +147,11 @@ test('preserves explicit-HDD-session progress-note and automatic session-story t
   assert.match(skill, /imdone-session-story:v1/i);
   assert.match(skill, /imdone-story-context:v1/i);
   assert.match(skill, /hddProgressNotes:enabled/i);
-  assert.match(skill, /accepted[^\n]*persist[^\n]*story metadata/i);
-  assert.match(skill, /decline[^\n]*unrecognized[^\n]*session/i);
-  assert.match(skill, /activation[^\n]*detection[^\n]*require[^\n]*using this HDD skill[^\n]*imdone-session-story:v1/i);
+  assert.match(skill, /explicit request[^\n]*(?:this HDD skill|HDD)[^\n]*enable[^\n]*progress-note/i);
+  assert.match(skill, /imdone ai[^\n]*(?:command|skill|imdone-story-context:v1)[^\n]*enable[^\n]*progress-note/i);
+  assert.match(skill, /explicit opt-out[^\n]*wins/i);
+  assert.match(skill, /without[^\n]*(?:request|marker|signal)[^\n]*capture[^\n]*off/i);
+  assert.match(skill, /never ask[^\n]*(?:consent|enable)[^\n]*progress notes/i);
   assert.match(skill, /story tags[^\n]*hddProgressNotes:enabled[^\n]*do not activate[^\n]*direct-agent/i);
   assert.match(skill, /imdone ai[^\n]*stays quiet[^\n]*session-story marker[^\n]*imdone-story-context:v1[^\n]*takes precedence/i);
   assert.match(skill, /sessionStoryKey[^\n]*authoritative[^\n]*default target/i);
