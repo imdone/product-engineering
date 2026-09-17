@@ -140,7 +140,7 @@ test('has no hard imdone dependency in public HDD markdown', async () => {
   }
 });
 
-test('preserves deterministic no-prompt progress-note and current-first targeting contracts', async () => {
+test('preserves explicit-HDD-session progress-note and automatic session-story targeting contracts', async () => {
   const skill = await fs.readFile(path.join(skillRoot, 'SKILL.md'), 'utf8');
 
   assert.match(skill, /#HDD-template.*#HDD-light-template/is);
@@ -153,9 +153,9 @@ test('preserves deterministic no-prompt progress-note and current-first targetin
   assert.match(skill, /without[^\n]*(?:request|marker|signal)[^\n]*capture[^\n]*off/i);
   assert.match(skill, /never ask[^\n]*(?:consent|enable)[^\n]*progress notes/i);
   assert.match(skill, /story tags[^\n]*hddProgressNotes:enabled[^\n]*do not activate[^\n]*direct-agent/i);
-  assert.doesNotMatch(skill, /missing[^\n]*ask[^\n]*enable progress notes/i);
+  assert.match(skill, /imdone ai[^\n]*stays quiet[^\n]*session-story marker[^\n]*imdone-story-context:v1[^\n]*takes precedence/i);
   assert.match(skill, /sessionStoryKey[^\n]*authoritative[^\n]*default target/i);
-  assert.match(skill, /without[^\n]*target-selection[^\n]*question/i);
+  assert.match(skill, /without[^\n]*(?:target-selection|which story)[^\n]*(?:prompt|question)/i);
   assert.match(skill, /explicit[^\n]*note-only redirect/i);
   assert.match(skill, /Jira keys[^\n]*numeric GitHub/i);
   assert.match(skill, /sessionStoryKey[^\n]*active_story/i);
@@ -164,13 +164,27 @@ test('preserves deterministic no-prompt progress-note and current-first targetin
   assert.match(skill, /do not persist[^\n]*raw context[^\n]*ranking scores/i);
 });
 
-test('identifies every progress-note target with a human-readable story title', async () => {
+test('infers HDD mode from saved template metadata before asking the engineer', async () => {
+  const setup = await fs.readFile(
+    path.join(skillRoot, 'references/session-setup.md'),
+    'utf8'
+  );
+
+  assert.match(setup, /imdoneTemplate/i);
+  assert.match(setup, /#HDD-template/i);
+  assert.match(setup, /#HDD-light-template/i);
+  assert.match(setup, /lightweight[^\n]*wins[^\n]*full tag/i);
+  assert.match(setup, /ask[^\n]*only[^\n]*(?:missing|conflict|cannot be inferred)/i);
+  assert.match(setup, /scripts\/detect_hdd_mode\.mjs/i);
+});
+
+test('identifies every recovery-prompt target with a human-readable story title', async () => {
   const contract = await fs.readFile(
     path.join(skillRoot, 'references/interaction-contract.md'),
     'utf8'
   );
 
-  assert.match(contract, /progress-note target (?:confirmation|resolution)/i);
+  assert.match(contract, /progress-note target resolution/i);
   assert.match(
     contract,
     /every displayed (?:target|alternative)[^\n]*issue key[^\n]*(?:story title|concise description)/i

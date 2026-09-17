@@ -15,7 +15,9 @@ Keep the public method usable with local Markdown. imdone may be described as an
 
 Every bundled HDD change to shared behavior must update the canonical open-source `product-engineering` public adaptation in the same change and keep the maintainer parity contract green. Treat an in-package or vendored copy as a delivery fixture, not as evidence that this repository was updated.
 
-Keep progress-note activation deterministic and prompt-free: an explicit HDD, HDD Light, or `imdone-ai` skill request, `imdone-session-story:v1` from `imdone hdd`, or `imdone-story-context:v1` from `imdone ai` enables capture for the resolved session story. An explicit opt-out always wins; without an explicit request or recognized marker, capture stays off. Never ask for consent to enable progress notes. Story tags and legacy `hddProgressNotes:enabled` metadata do not activate ordinary direct-agent sessions and are not required by recognized sessions.
+Keep the retained HDD session story as the automatic progress-note target. Confirm it through the correlated lifecycle without a redundant target question; allow an explicitly named, locally resolvable Jira key or numeric GitHub issue as a note-only redirect without mutating current or session story state. Use bounded HDD-eligible recommendations only as fail-closed recovery when automatic confirmation cannot complete.
+
+Infer Full or Lightweight HDD from closing story metadata before asking the engineer to repeat the choice: `#HDD-template` selects Full HDD, while `#HDD-light-template` or the corresponding lightweight `imdoneTemplate` selects Lightweight HDD. Lightweight metadata wins over a legacy companion full tag.
 
 Before opening a pull request:
 

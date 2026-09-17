@@ -80,7 +80,7 @@ HDD is the method. imdone is an optional operational layer for teams that want t
 
 If you want that operational layer, learn more at [imdone.io](https://imdone.io) or install the [imdone CLI from npm](https://www.npmjs.com/package/imdone-cli).
 
-The public skill checks whether imdone is installed and whether the current workspace supports its project features. When those deterministic checks pass, it uses imdone for session state, progress notes, templates, and user-approved provider sync; in particular, it tries `imdone note` before writing a progress note directly. If imdone is absent or a command fails, HDD continues with local Markdown and external evidence gates. No imdone command, account, or project configuration is required to practice the method.
+The public skill checks whether imdone is installed and whether the current workspace supports its project features. When those deterministic checks pass, it uses imdone for session state, progress notes, templates, and user-approved provider sync; in particular, it tries `imdone note` before writing a progress note directly. Existing full or lightweight template metadata selects the saved HDD mode before the skill asks a setup question. In an enabled marked session, the retained session story is the automatic note target; an explicitly named Jira key or numeric GitHub issue redirects only that note without changing session or global current state. If imdone is absent or a command fails, HDD continues with local Markdown and external evidence gates. No imdone command, account, or project configuration is required to practice the method.
 
 ## Feedback And Contributions
 
