@@ -115,7 +115,7 @@ After `## Hypothesis` is accepted, written, and checked complete, ask once:
 
 ```text
 Hypothesis is complete. Continue through the remaining HDD workflow without routine per-artifact interruption?
-1. Yes, continue through all remaining phases unless a blocker, missing decision, external evidence gate, major pivot, push prompt, or user correction requires stopping
+1. Yes, continue through all remaining phases unless a blocker, missing decision, external evidence gate, major pivot, required approval, or user correction requires stopping
 2. Continue through the evaluated Plan, then stop before product-code edits
 3. Continue through the rest of Define the Outcome only
 4. No, keep reviewing each artifact with me
@@ -125,11 +125,10 @@ If the user chooses option 1, 2, or 3:
 - continue in checklist order and keep writing artifacts directly instead of asking the standard review prompt after every artifact
 - still read the required focused references, inspect related work, run evaluators, and keep the issue and attachments current
 - still stop for unclear product decisions, missing required context, hard blockers, external evidence gates, major plan or architecture pivots, failed evaluators, or newer user instructions
-- for options 1 and 3, also stop for push prompts required by sync behavior; option 2 uses the narrower deferral rule below
 - summarize the artifacts changed and verification performed at natural checkpoints instead of interrupting after each ordinary artifact
-- for option 2, use a session-local continuation-through-Plan scope: continue through the remaining Define work, Design, and evaluated Plan; defer routine per-artifact review and defer routine phase and progress-note push prompts while that scope is active
+- for option 2, use a session-local continuation-through-Plan scope: continue through the remaining Define work, Design, and evaluated Plan; defer routine per-artifact review and carry any due phase or progress-note reminder forward while that scope is active
 - still stop option 2 for an explicit user-requested push, blocker, missing decision, external evidence gate, major pivot, user correction, required tool approval, or failed evaluator
-- end option 2 at the evaluated Plan checkpoint before product-code edits; report current pending-change status there and offer the configured keep-local or push-now choice before the normal Plan approval checkpoint
+- end option 2 at the evaluated Plan checkpoint before product-code edits; if a reminder is due and the retained story has pending changes, append the non-blocking story-scoped reminder to the normal Plan approval checkpoint
 - for option 3, resume normal review prompts after Define the Outcome is complete unless the user explicitly extends continuation
 
 ## Sync Behavior
@@ -138,39 +137,16 @@ If the user chooses option 1, 2, or 3:
 - Use `imdone pull` when imdone is available and the local story needs the latest provider state before continuing.
 - If imdone is unavailable, skip provider sync commands and record the needed provider refresh, publication, or review as an external evidence gate.
 - If a sync conflict occurs during `imdone push`, resolve the file conflict, then run `imdone merge` before continuing.
-- Follow `references/configuration.md` for push defaults and prompt behavior only in imdone projects.
-- Before asking whether to run `imdone push`, check `imdone agent-config get-config` and only prompt when `push.imdoneStatus.hasPendingChanges` is true. If `imdone status` reports `Nothing to push`, skip the reminder. If imdone is unavailable, do not ask for `imdone push`.
-- If push behavior is configured as `interval_prompt`, call `imdone agent-config get-config` before substantial work cycles and when deciding whether to prompt, and use `push.promptDue`, `push.elapsedMinutes`, and `push.nextPromptAt` instead of rough mental timing.
-- In `interval_prompt` mode, call `imdone agent-config record-push-prompt` every time the workflow actually asks whether to run `imdone push`, including prompts triggered by elapsed time, major checkpoints, or explicit user requests.
+- Follow `references/configuration.md` for push reminder defaults and eligibility only in imdone projects.
+- Treat reminder eligibility and reminder placement as separate gates. The configured `phase_prompt` or `interval_prompt` mode determines whether a reminder is due. A due reminder may be displayed only when the response is already a natural stopping point for a reason independent of push state.
+- A response is a natural stopping point only when the agent must already yield for a required approval or decision, a blocker, missing decision, tool approval, or external evidence gate; has reached the evaluated-Plan checkpoint; is at a Deploy or Confirm handoff; or the requested session work is complete and the agent is handing control back.
+- Routine phase completion, plan writing, and progress-note recording do not create a natural stopping point. An interval becoming due does not create one either. If useful work can continue, continue without displaying the reminder.
+- At an existing natural stopping point, first use `imdone agent-config get-config` to confirm the configured reminder is due. Then run `imdone status <sessionStoryKey> -f json`. Display the reminder only when that story-scoped result reports pending changes for the retained session story. Unrelated dirty stories and a clean retained story produce no reminder.
+- Use one concise reminder statement: **<sessionStoryKey> has local changes. Run `imdone push <sessionStoryKey>` when ready to publish them.** The reminder is not a question, has no numbered choices, and does not offer the agent as the actor who will push.
+- In `interval_prompt` mode, call `imdone agent-config get-config` before substantial work cycles and when evaluating a natural stopping point. Use `push.promptDue`, `push.elapsedMinutes`, and `push.nextPromptAt` instead of rough mental timing.
+- Call the backward-compatible `imdone agent-config record-push-prompt` command each time a reminder is actually displayed. The command name does not authorize a question or agent-executed push.
 - After `imdone push` succeeds, do not call an HDD-only sync timestamp setter. The `imdone push` command owns successful push sync timestamp recording; refresh state with `imdone agent-config get-config` when the workflow needs the updated timing.
-- If `attachments/plan.md` is created from placeholder content into a real plan in an imdone project, treat that as a push-worthy checkpoint in `phase_prompt` mode.
-- If a progress note is recorded in `attachments/progress-notes.md` in an imdone project, treat that as a push-worthy checkpoint in `phase_prompt` mode because resumability context changed materially.
-
-After each phase in an imdone project:
-- if `push.mode` is `phase_prompt`, ask:
-  ```text
-  Phase complete. Push changes now? (imdone push)
-  1. Yes, run imdone push
-  2. No, leave changes local
-  ```
-- after the first real plan is written and `push.mode` is `phase_prompt`, ask:
-  ```text
-  Plan updated. Push changes now? (imdone push)
-  1. Yes, run imdone push
-  2. No, leave changes local
-  ```
-- after a progress note is recorded and `push.mode` is `phase_prompt`, ask:
-  ```text
-  Progress note recorded. Push changes now? (imdone push)
-  1. Yes, run imdone push
-  2. No, leave changes local
-  ```
-- if `push.mode` is `interval_prompt` and `push.promptDue` is true, ask:
-  ```text
-  Phase complete and the push interval has elapsed. Push changes now? (imdone push)
-  1. Yes, run imdone push
-  2. No, leave changes local
-  ```
-- if `push.mode` is `interval_prompt` and `push.promptDue` is false, do not ask to push yet; if `imdone status` is clean, say nothing about pushing
-
-If the user chooses yes, run `imdone push`, then call `imdone agent-config get-config` if the workflow needs refreshed timing. If no, leave the interval overdue state intact and remind the user to push before ending the session. If imdone is unavailable, skip this push prompt behavior entirely.
+- In `phase_prompt` mode, completing a phase, first writing a real `attachments/plan.md`, or recording `attachments/progress-notes.md` makes a reminder eligible. Carry that eligibility to the next natural stopping point instead of creating an interaction turn.
+- In `interval_prompt` mode, `push.promptDue: true` makes a reminder eligible. Carry it while useful work continues and evaluate it at the next natural stopping point. When `push.promptDue` is false, do not display a reminder.
+- An explicit user-requested push may run only the requested story-scoped command, such as `imdone push <issueKey>`. The reminder policy does not block an explicit push request and does not widen it to an unscoped command.
+- If imdone is unavailable, skip this reminder behavior entirely.
