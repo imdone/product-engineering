@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.2.5 - 2026-09-17
+
+### Changed
+
+- Replace reply-required push questions with non-blocking, story-scoped reminders shown only when HDD is already yielding at a natural stopping point; the developer remains responsible for running `imdone push <sessionStoryKey>`.
+- Align the public skill with prompt-free event-triggered progress-note activation for explicit HDD and `imdone-ai` sessions while preserving opt-out and quiet ordinary sessions.
+
 ## 0.2.4 - 2026-09-08
 
 ### Changed

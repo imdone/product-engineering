@@ -61,7 +61,7 @@ test('uses a matching package and plugin identity', async () => {
   );
 
   assert.equal(packageManifest.name, '@imdone/product-engineering');
-  assert.equal(packageManifest.version, '0.2.4');
+  assert.equal(packageManifest.version, '0.2.5');
   assert.ok(packageManifest.files.includes('.agents'));
   assert.ok(packageManifest.files.includes('.claude-plugin'));
   assert.ok(packageManifest.files.includes('scripts'));
@@ -153,7 +153,7 @@ test('preserves explicit-HDD-session progress-note and automatic session-story t
   assert.match(skill, /without[^\n]*(?:request|marker|signal)[^\n]*capture[^\n]*off/i);
   assert.match(skill, /never ask[^\n]*(?:consent|enable)[^\n]*progress notes/i);
   assert.match(skill, /story tags[^\n]*hddProgressNotes:enabled[^\n]*do not activate[^\n]*direct-agent/i);
-  assert.match(skill, /imdone ai[^\n]*stays quiet[^\n]*session-story marker[^\n]*imdone-story-context:v1[^\n]*takes precedence/i);
+  assert.match(skill, /legacy `?hddProgressNotes:enabled`? metadata[^\n]*not required[^\n]*(?:recognized HDD|imdone ai)/i);
   assert.match(skill, /sessionStoryKey[^\n]*authoritative[^\n]*default target/i);
   assert.match(skill, /without[^\n]*(?:target-selection|which story)[^\n]*(?:prompt|question)/i);
   assert.match(skill, /explicit[^\n]*note-only redirect/i);

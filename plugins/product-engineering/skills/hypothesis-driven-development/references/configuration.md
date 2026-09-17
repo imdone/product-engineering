@@ -30,14 +30,14 @@ Supported keys:
   - ISO timestamp for the current HDD session baseline
   - written by `imdone agent-config begin-session`
 - `push.last_prompt_at`
-  - ISO timestamp for the most recent push prompt shown to the user
+  - backward-compatible field name for the most recent push reminder shown to the user
   - written by `imdone agent-config record-push-prompt`
 - `push.last_push_at`
   - ISO timestamp for the most recent successful `imdone push`
   - command-owned sync timing; HDD reads it through `imdone agent-config get-config` and does not set it directly
 - `push.imdoneStatus`
   - current `imdone status` result collected by `imdone agent-config get-config`
-  - includes `hasPendingChanges`, which must be true before the workflow asks whether to run `imdone push`
+  - includes `hasPendingChanges`, which helps determine reminder eligibility but does not replace the required story-scoped status check at display time
 - `active_story.key`
   - optional saved HDD story key
   - local-only resume pointer
@@ -63,8 +63,8 @@ Interactive setup behavior when push config is missing:
 - `get-config` returns `push.status: "missing"` in that case and still includes the smart default values as suggested answers, not as silently accepted choices.
 
 1. Ask whether the user wants, using numbered choices:
-   1. `Prompt after each phase (Default)`
-   2. `Prompt on a timed interval`
+   1. `Remind at the next natural stopping point after each phase (Default)`
+   2. `Remind at the next natural stopping point after a timed interval`
 2. If they choose the timed interval option, ask for the interval in minutes using numbered choices:
    1. `Use 10 minutes (Default)`
    2. `Use a different interval: <minutes>`
@@ -73,14 +73,16 @@ Interactive setup behavior when push config is missing:
 5. After config is stored, call `imdone agent-config begin-session` so interval timing starts for the current HDD session.
 6. Use the written config values for the current session.
 
-Push prompt behavior:
+Push reminder behavior:
 
-- Before any push reminder, use `imdone agent-config get-config` and check `push.imdoneStatus.hasPendingChanges`.
-- Only ask whether to run `imdone push` when `imdone status` reports pending changes. If `imdone status` reports `Nothing to push`, do not remind the user even when the phase or interval condition is due.
-- `push.promptDue` is already gated by both elapsed interval and pending `imdone status` changes.
+- Use `imdone agent-config get-config` to determine whether the configured phase or interval makes a reminder eligible. Eligibility never creates a new interaction turn.
+- Display an eligible reminder only at a natural stopping point defined in `references/interaction-contract.md`, when the agent is already yielding for a reason independent of push state.
+- Immediately before displaying the reminder, run `imdone status <sessionStoryKey> -f json`. Display it only when that story-scoped result reports pending changes. A clean retained story or changes belonging only to unrelated stories produce no reminder.
+- The reminder is a concise statement telling the developer to run `imdone push <sessionStoryKey>` when ready. It is not a question, contains no numbered push choices, and does not offer agent execution.
+- `push.promptDue` remains the backward-compatible interval eligibility signal. Placement at a natural stopping point and the story-scoped status check are additional gates.
 
-- `phase_prompt`: ask whether to push after each completed phase, after `attachments/plan.md` is first written with a real plan, and after a progress note is recorded in `attachments/progress-notes.md`, but only when `imdone status` reports pending changes.
-- `interval_prompt`: call `imdone agent-config get-config` when deciding whether the interval has elapsed and use `push.promptDue`, `push.elapsedMinutes`, and `push.nextPromptAt` instead of rough mental timing. Check this before substantive work cycles, when a major checkpoint or risk boundary is reached, and when the user explicitly asks to sync earlier. After any push reminder is shown, call `imdone agent-config record-push-prompt` for visibility. After a successful `imdone push`, rely on the command-owned sync timestamp and refresh state with `imdone agent-config get-config` when timing is needed.
+- `phase_prompt`: completing a phase, first writing a real `attachments/plan.md`, or recording `attachments/progress-notes.md` makes a reminder eligible. Carry it forward while useful work continues, then evaluate it at the next natural stopping point.
+- `interval_prompt`: call `imdone agent-config get-config` when deciding whether the interval has elapsed and use `push.promptDue`, `push.elapsedMinutes`, and `push.nextPromptAt` instead of rough mental timing. Carry an eligible reminder while useful work continues, then evaluate it at the next natural stopping point. After a reminder is displayed, call `imdone agent-config record-push-prompt` for visibility. After a successful user-requested `imdone push <issueKey>`, rely on the command-owned sync timestamp and refresh state with `imdone agent-config get-config` when timing is needed.
 
 When push config is missing, writing `backlog/.imdone/agent-config.yml` or adding the missing `push` block from the prompted setup through `imdone agent-config` is the expected behavior.
 After push config exists, do not edit it unless the user explicitly asks for that.
@@ -99,7 +101,7 @@ imdone agent-config set-active-story --key SCRUM-267
 Use `imdone agent-config get-config` when the workflow needs push reminder settings such as `phase_prompt` versus `interval_prompt`.
 If `imdone agent-config get-config` returns `push.status: "missing"`, ask the user to choose their reminder behavior before proceeding with workflow work.
 Use `imdone agent-config begin-session` after push config is available so interval timing starts from the current HDD session instead of an older run.
-Use `imdone agent-config record-push-prompt` every time the workflow actually asks whether to run `imdone push`, including early prompts caused by major checkpoints or explicit user requests. Do not call it when `imdone status` is clean and no prompt is shown.
+Use `imdone agent-config record-push-prompt` every time the workflow actually displays a reminder. The legacy command name does not authorize a question or agent-executed push. Do not call it when the retained story is clean and no reminder is shown.
 Do not call an HDD-only command to set sync timestamps after `imdone push`; successful sync commands own their own sync timing, and HDD should read the resulting state through `imdone agent-config get-config`.
 Use `imdone agent-config set-push-config` when interactive setup or an explicit user instruction changes push reminder behavior.
 Use `imdone agent-config get-active-story` when the workflow needs either a valid saved story with a resolved local issue path or a no-valid-story result.
