@@ -65,6 +65,10 @@ test('documents the same-change maintenance contract for shared HDD behavior', a
 test('documents the conditional Design mockup gate', async () => {
   const readme = await fs.readFile(path.join(root, 'README.md'), 'utf8');
 
-  assert.match(readme, /UX-changing Design.*mockup.*before Plan/is);
+  assert.match(
+    readme,
+    /UX-changing Design.*current-state.*rendered high-fidelity mockup.*before Plan/is
+  );
+  assert.match(readme, /Markdown-only.*(?:does not|cannot).*qualify/is);
   assert.match(readme, /non-UX Design.*(?:reason|not applicable)/is);
 });

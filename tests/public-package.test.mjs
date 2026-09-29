@@ -61,7 +61,7 @@ test('uses a matching package and plugin identity', async () => {
   );
 
   assert.equal(packageManifest.name, '@imdone/product-engineering');
-  assert.equal(packageManifest.version, '0.2.5');
+  assert.equal(packageManifest.version, '0.3.0');
   assert.ok(packageManifest.files.includes('.agents'));
   assert.ok(packageManifest.files.includes('.claude-plugin'));
   assert.ok(packageManifest.files.includes('scripts'));
