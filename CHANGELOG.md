@@ -4,7 +4,7 @@
 
 ### Added
 
-- Require UX-changing Design to create, link, and obtain product-owner review of a fit-for-purpose mockup before Plan, while non-UX Design records why a mockup is not applicable.
+- Require UX-changing Design to link current-state evidence and obtain product-owner review of a rendered high-fidelity mockup before Plan; Markdown-only artifacts do not qualify, unavailable current state leaves Design open, and non-UX Design records why a mockup is not applicable.
 
 ## 0.2.5 - 2026-09-17
 
