@@ -61,3 +61,10 @@ test('documents the same-change maintenance contract for shared HDD behavior', a
   assert.match(contributing, /public adaptation/i);
   assert.match(contributing, /parity/i);
 });
+
+test('documents the conditional Design mockup gate', async () => {
+  const readme = await fs.readFile(path.join(root, 'README.md'), 'utf8');
+
+  assert.match(readme, /UX-changing Design.*mockup.*before Plan/is);
+  assert.match(readme, /non-UX Design.*(?:reason|not applicable)/is);
+});

@@ -29,6 +29,16 @@ Before drafting or revising Design, Plan, or Implement:
 - Identify the first boundary or module to touch.
 - Name the dependency direction that must stay clean.
 - Identify whether the story adds a new use case or variation that creates an axis of change in the touched path.
+- Record one explicit **UX mockup decision** before Design can complete:
+  - **Required** when the slice materially changes a user-visible layout, interaction, navigation path, responsive behavior, or visual hierarchy.
+  - **Not applicable** when it does not; record the specific reason instead of creating a placeholder visual.
+- When a mockup is required:
+  - name the UX ambiguity plus the states, transitions, and viewport variants the visual must resolve
+  - create and link a fit-for-purpose mockup from `attachments/design.md`; use an available bitmap or image-generation capability for visual composition, a code-native interactive mockup for behavior or responsive proof, or another reviewable visual format suited to the decision
+  - present the mockup in a numbered product-owner review with Accept, Revise, and Defer choices
+  - record acceptance, requested revisions, or deferral in `attachments/progress-notes.md`; a deferral is an external evidence gate and leaves Design open
+  - do not begin Plan until the product owner has accepted the mockup
+- Keep the mockup rule capability-neutral. Require a reviewable artifact and decision evidence, but do not require one vendor, image model, framework, or file format.
 - Create at least one Mermaid diagram in `attachments/diagram.md` during Design.
 - Use the diagrams to show the key boundary, flow, or code-change path that makes the design understandable to another engineer.
 - Keep the diagrams small and practical; choose the diagram types that best fits the decision instead of defaulting to a flowchart.

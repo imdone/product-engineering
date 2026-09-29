@@ -4,6 +4,7 @@
 
 ### Changed
 
+- Require UX-changing Design to create, link, and obtain product-owner review of a fit-for-purpose mockup before Plan, while non-UX Design records why a mockup is not applicable.
 - Replace reply-required push questions with non-blocking, story-scoped reminders shown only when HDD is already yielding at a natural stopping point; the developer remains responsible for running `imdone push <sessionStoryKey>`.
 - Align the public skill with prompt-free event-triggered progress-note activation for explicit HDD and `imdone-ai` sessions while preserving opt-out and quiet ordinary sessions.
 
