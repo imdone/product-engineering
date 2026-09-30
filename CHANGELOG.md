@@ -1,11 +1,16 @@
 # Changelog
 
+## 0.3.1 - 2026-09-30
+
+### Added
+
+- Require UX-changing plans to derive story-owned tests from the accepted states and viewports, compare durable rendered implementation evidence with the accepted mockup, and correct material mismatches before implementation completes; reusable skill fixtures stay product-neutral and structural tests alone do not satisfy the fidelity gate.
+
 ## 0.3.0 - 2026-09-28
 
 ### Added
 
 - Require UX-changing Design to link current-state evidence and obtain product-owner review of a rendered high-fidelity mockup before Plan; Markdown-only artifacts do not qualify, unavailable current state leaves Design open, and non-UX Design records why a mockup is not applicable.
-- Require UX-changing plans to derive story-owned tests from the accepted states and viewports, compare durable rendered implementation evidence with the accepted mockup, and correct material mismatches before implementation completes; reusable skill fixtures stay product-neutral and structural tests alone do not satisfy the fidelity gate.
 
 ## 0.2.5 - 2026-09-17
 
