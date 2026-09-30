@@ -72,7 +72,7 @@ Keep the story plus its evidence together. This plain-Markdown path does not req
 3. **Deploy the Outcome** — capture proof that the slice is live in an appropriate place.
 4. **Confirm the Outcome** — review done-ness, measure the result, collect direct feedback, and decide whether to close, iterate, or pivot.
 
-During UX-changing Design, HDD links current-state evidence, then creates and reviews a rendered high-fidelity mockup before Plan; Markdown-only artifacts cannot qualify. During non-UX Design, it records the reason a mockup is not applicable.
+During UX-changing Design, HDD links current-state evidence, then creates and reviews a rendered high-fidelity mockup before Plan; Markdown-only artifacts cannot qualify. The plan then derives story-owned tests from the accepted states and viewports, compares rendered implementation evidence with that mockup, and corrects material mismatches before implementation completes. During non-UX Design, it records the reason a mockup is not applicable.
 
 Full HDD fits ambiguous, high-risk, cross-team, or implementation-heavy work. Lightweight HDD keeps the same evidence and plan-approval discipline while using fewer artifacts for low-risk changes.
 

@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import fs from "node:fs";
+import path from "node:path";
 
 const TASK_RE = /^\s*[-*]\s+\[(?<mark>[ xX])\]\s+(?<text>.+)$/;
 const HEADING_RE = /^(?<level>#{2,6})\s+(?<title>.+)$/;
@@ -13,6 +14,17 @@ const DOC_DECISION_RE = /update|no[- ]?change|not needed|not applicable|does not
 const README_STYLE_RE = /readme-style-guide|README style guide|readme style guide/i;
 const CHANGELOG_STYLE_RE = /changelog-style-guide|CHANGELOG style guide|changelog style guide/i;
 const FULL_TEST_SUITE_RE = /\bfull (test suite|suite)\b|\bentire test suite\b|\bcomplete test suite\b|\ball tests\b|\bnpm test\b|\bnpm run test-ci\b|\bnpm run test\b|\bpnpm test\b|\byarn test\b|\bcargo test\b|\bgo test \.\/\.\.\.\b|\bpytest\b|\bvitest --run\b/i;
+const UX_MOCKUP_DECISION_RE = /^(?:#{2,6}\s+.*\bUX mockup decision\b.*|\s*\*\*UX mockup decision:?\*\*.*)$/gim;
+const REQUIRED_RE = /\brequired\b/i;
+const ACCEPTED_RE = /\baccept(?:ed|ance)\b/i;
+const NOT_APPLICABLE_RE = /\bnot applicable\b/i;
+const RENDERED_IMPLEMENTATION_RE = /render(?:ed|ing)?\s+(?:the\s+)?(?:real\s+)?implementation|implementation screenshots?|actual-state (?:screenshots?|evidence)|rendered actual-state evidence/i;
+const ACCEPTED_MOCKUP_COMPARISON_RE = /(?:compar(?:e|ed|ing|ison)|match(?:es|ed|ing)?|diff|fidelity)[^\n]{0,180}accepted[^\n]{0,100}(?:mockup|design|artifact)|accepted[^\n]{0,100}(?:mockup|design|artifact)[^\n]{0,180}(?:compar(?:e|ed|ing|ison)|match(?:es|ed|ing)?|diff|fidelity)/i;
+const STATES_RE = /\bstates?\b/i;
+const VIEWPORTS_RE = /\bviewports?\b/i;
+const MISMATCH_RE = /\b(?:mismatch(?:es)?|difference(?:s)?|drift)\b/i;
+const CORRECTION_RE = /\b(?:correct(?:ion|ions)?|reopen(?:s|ed|ing)?|revise[sd]?|fix(?:es|ed|ing)?)\b/i;
+const REEVALUATE_RE = /\b(?:re-evaluat(?:e|ed|es|ing|ion)|reevaluat(?:e|ed|es|ing|ion)|repeat(?:s|ed|ing)?)\b/i;
 
 function classify(text) {
   const normalized = text.trim().toLowerCase();
@@ -27,6 +39,37 @@ function classify(text) {
 
 function isExecutable(task) {
   return !(NON_EXEC_RE.test(task.text) || NON_EXEC_RE.test(task.section));
+}
+
+function uxMockupDecision(planPath) {
+  const designPath = path.join(path.dirname(planPath), "design.md");
+  if (!fs.existsSync(designPath)) return null;
+
+  const design = fs.readFileSync(designPath, "utf8");
+  const markers = [...design.matchAll(UX_MOCKUP_DECISION_RE)];
+  if (markers.length === 0) return null;
+
+  const decisions = markers.map((marker) => {
+    const rest = design.slice(marker.index + marker[0].length);
+    const nextHeading = /^#{2,6}\s+/m.exec(rest);
+    return `${marker[0]}\n${nextHeading ? rest.slice(0, nextHeading.index) : rest}`;
+  });
+  if (decisions.some((decision) => REQUIRED_RE.test(decision) && ACCEPTED_RE.test(decision))) {
+    return "required-accepted";
+  }
+  if (decisions.every((decision) => NOT_APPLICABLE_RE.test(decision))) return "not-applicable";
+  return "open";
+}
+
+function hasImplementationFidelityGate(tasks) {
+  const executableText = tasks.filter(isExecutable).map((task) => task.text).join("\n");
+  return RENDERED_IMPLEMENTATION_RE.test(executableText)
+    && ACCEPTED_MOCKUP_COMPARISON_RE.test(executableText)
+    && STATES_RE.test(executableText)
+    && VIEWPORTS_RE.test(executableText)
+    && MISMATCH_RE.test(executableText)
+    && CORRECTION_RE.test(executableText)
+    && REEVALUATE_RE.test(executableText);
 }
 
 export function parseTasks(path) {
@@ -62,6 +105,12 @@ export function evaluate(path) {
 
   if (executable.length === 0) {
     return [{ message: "No executable markdown tasks found." }];
+  }
+
+  if (uxMockupDecision(path) === "required-accepted" && !hasImplementationFidelityGate(tasks)) {
+    findings.push({
+      message: "UX plan with an accepted mockup must include an executable visual fidelity evaluation that compares rendered implementation evidence for the accepted states and viewports, then corrects and re-evaluates material mismatches.",
+    });
   }
 
   const first = executable[0];

@@ -77,6 +77,16 @@ Before drafting or revising Design, Plan, or Implement:
 - Include likely files or components when inferable.
 - Include constraints so scope does not expand.
 - End with verification.
+- When Design records a required and accepted UX mockup, include an executable **implementation-fidelity evaluation** before Implement can complete:
+  - create story-owned failing tests derived from that story's accepted states, viewport variants, and objective interaction/accessibility contracts; keep those product tests with the product story rather than copying them into the reusable HDD skill
+  - render the real implementation in every accepted state and viewport variant needed to resolve the identified UX ambiguity
+  - retain durable actual-state screenshots or equivalent rendered evidence with the story
+  - compare that evidence directly with the accepted mockup, including the recognizable context, design language, unaffected behavior, and proposed delta named during Design
+  - treat DOM, unit, structural, accessibility, and layout assertions as supporting evidence rather than a substitute for rendered comparison
+  - when a material mismatch remains, keep Implement open, record the mismatch, reopen the smallest red/green/refactor correction, and repeat the fidelity evaluation
+  - when the implementation intentionally differs, revise Design and obtain an explicit product-owner decision instead of silently treating drift as completion
+- Keep implementation-fidelity proof capability-neutral. Require a rendered actual state, direct comparison, durable evidence, and a correction loop without requiring one browser, screenshot tool, visual-diff service, image model, or file format.
+- Keep reusable HDD contract fixtures product-neutral. Skill tests prove that the workflow creates and evaluates story-owned tests; they do not reproduce named product stories, their UI labels, or their mockup filenames.
 - End with a final confirmation phase whose last executable task runs the full project test suite. Focused tests, smoke tests, demos, package checks, and linters may appear earlier, but the full suite must be the final implementation confirmation before Implement can be checked complete.
 - Include the smallest feedback affordance or equivalent capture path that lets the target user provide feedback from the surface they use. For UI work this should be in-app; for CLI/API/automation work it may be command output plus help/feedback links, logs, persisted artifacts, audit records, metrics, or provider-visible state.
 - Include the instrumentation/data capture work needed to measure the primary success metric: event name, payload fields, storage/query location, command output, persisted artifact, log record, provider field, or other durable evidence source, plus how to verify the signal is emitted.
@@ -171,6 +181,7 @@ Before drafting or revising Design, Plan, or Implement:
   - update the affected phase tasks in `attachments/plan.md`
   - run `imdone note <issueKey> "<old next step, new next step, status change, reason for the pivot, user feedback, discovered constraint, or warning for future resumption>"` first, or append that note directly to `attachments/progress-notes.md` only if `imdone note` is unavailable or fails
 - Before checking `Implement` complete, make sure `attachments/demo.md` still matches the real behavior well enough for another human or AI to show the slice without reconstructing the flow from memory.
+- Before checking `Implement` complete for work with an accepted UX mockup, execute the planned implementation-fidelity evaluation and retain its actual-state evidence. Do not infer visual fidelity from passing DOM, unit, structural, accessibility, or layout tests. If the rendered implementation materially differs from the accepted artifact, leave Implement open and complete the planned correction and re-evaluation loop or obtain product-owner acceptance of a revised Design.
 - Before checking `Implement` complete, run the full project test suite from the plan's final confirmation phase after focused checks and artifact-specific verification are green. If the full suite fails, treat that as implementation feedback: fix it, update the plan if the path changes, and do not check Implement complete until the full suite passes or a concrete blocker is recorded.
 - If the next unchecked item requires a real-world meeting, deployment, customer action, or other external evidence, stop local implementation at that evidence gate. Record the blocker, the required outside action, and where the resulting evidence must be captured before more boxes are checked.
 

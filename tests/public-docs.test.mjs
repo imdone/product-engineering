@@ -70,5 +70,9 @@ test('documents the conditional Design mockup gate', async () => {
     /UX-changing Design.*current-state.*rendered high-fidelity mockup.*before Plan/is
   );
   assert.match(readme, /Markdown-only.*(?:does not|cannot).*qualify/is);
+  assert.match(
+    readme,
+    /plan.*story-owned tests.*accepted states.*viewports.*compare.*rendered implementation evidence.*mockup.*corrects? material mismatches.*before implementation completes/is
+  );
   assert.match(readme, /non-UX Design.*(?:reason|not applicable)/is);
 });

@@ -46,5 +46,23 @@ test('requires a conditional UX mockup and review gate during Design', async () 
   assert.match(designGuidance, /(?:do not begin|block).*Plan.*accepted/is);
   assert.match(designGuidance, /not applicable.*(?:specific|concrete).*reason/is);
   assert.match(designGuidance, /bitmap.*code-native/is);
+  assert.match(skill, /Plan.*accepted mockup.*render.*implementation.*states.*viewports/is);
+  assert.match(skill, /story-owned tests.*accepted states.*viewports.*interaction contracts/is);
+  assert.match(skill, /skill tests.*generically.*must not embed.*product story/is);
+  assert.match(designGuidance, /implementation-fidelity evaluation/i);
+  assert.match(designGuidance, /story-owned failing tests.*accepted states.*viewport variants/is);
+  assert.match(designGuidance, /contract fixtures product-neutral/is);
+  assert.match(
+    designGuidance,
+    /actual-state.*(?:screenshots|rendered evidence).*compare.*accepted mockup/is
+  );
+  assert.match(
+    designGuidance,
+    /(?:DOM|unit).*structural.*layout.*supporting evidence.*(?:not|rather than).*substitute/is
+  );
+  assert.match(
+    designGuidance,
+    /material mismatch.*(?:keep Implement open|reopen).*repeat.*fidelity evaluation/is
+  );
   assert.doesNotMatch(designGuidance, /must use (?:ImageGen|imagegen)/i);
 });
