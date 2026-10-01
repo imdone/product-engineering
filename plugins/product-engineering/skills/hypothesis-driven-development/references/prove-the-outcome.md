@@ -47,6 +47,7 @@ Before drafting or revising Design, Plan, or Implement:
 - Use the diagrams to show the key boundary, flow, or code-change path that makes the design understandable to another engineer.
 - Keep the diagrams small and practical; choose the diagram types that best fits the decision instead of defaulting to a flowchart.
 - Keep Mermaid diagrams readable in both light and dark mode. Prefer default theme colors, avoid hard-coded light-only or dark-only fills/text, and use labels that still read clearly without custom styling.
+- After creating or changing `attachments/diagram.md`, run `node <skill-root>/scripts/validate_mermaid.mjs <path-to-attachments/diagram.md>`. The validator parses every fenced Mermaid block with a pinned Mermaid version and exits nonzero with file, block, and line context on failure. Do not check Design complete or proceed to Plan when validation fails or the pinned parser cannot be loaded; record the blocker and retry when npm/network access is available.
 - Avoid new layers unless the story forces them.
 - When the slice touches an existing flow, look for obvious duplication in that touched path and prefer a small DRY cleanup over copying the same logic into one more branch.
 - Prefer code as documentation. Favor clearer names, smaller helpers, simpler control flow, and stronger tests before adding explanatory prose.
@@ -124,6 +125,7 @@ Before drafting or revising Design, Plan, or Implement:
   - regression risk
 - Include 1-3 short code-focused snippets or pseudocode blocks for the highest-risk or least-obvious steps.
 - Reuse and refine the Design diagrams in `attachments/diagram.md` when the Plan step needs more precision; add headings when more than one diagram is useful.
+- Re-run `scripts/validate_mermaid.mjs` whenever Plan or Implement changes a Mermaid block, and repair syntax before accepting the plan or advancing past that implementation task.
 - Diagram the code-change path when the plan depends on touching multiple production files or modules in a specific order.
 - Keep tests out of the diagrams unless the user explicitly wants them shown; describe test strategy in the plan text instead.
 - Choose the diagram types that best matches the decision being communicated instead of defaulting to a flowchart.

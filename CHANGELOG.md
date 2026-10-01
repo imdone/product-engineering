@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.2 - 2026-10-01
+
+### Added
+
+- Validate every HDD Mermaid block with a pinned parser before Design completes or later diagram changes advance.
+
 ## 0.3.1 - 2026-09-30
 
 ### Added

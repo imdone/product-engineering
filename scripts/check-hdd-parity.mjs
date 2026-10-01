@@ -41,7 +41,8 @@ export const requiredSharedFiles = [
   'scripts/detect_hdd_mode.mjs',
   'scripts/evaluate_hdd_plan.mjs',
   'scripts/evaluate_hdd_skill.mjs',
-  'scripts/evaluate_progress_notes_contract.mjs'
+  'scripts/evaluate_progress_notes_contract.mjs',
+  'scripts/validate_mermaid.mjs'
 ];
 
 export const forbiddenHardDependencies = [
