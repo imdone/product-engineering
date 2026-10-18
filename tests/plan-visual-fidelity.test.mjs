@@ -21,9 +21,10 @@ const structurallyCompletePlan = `# Implementation Plan
 async function withStory(design, plan, callback) {
   const directory = await fs.mkdtemp(path.join(os.tmpdir(), 'hdd-visual-fidelity-'));
   try {
-    await fs.writeFile(path.join(directory, 'design.md'), design);
+    await fs.writeFile(path.join(directory, 'mockup.html'), '<!doctype html><title>Accepted UI mockup</title>');
+    await fs.writeFile(path.join(directory, 'design.md'), design.replace(/(\*\*Required and accepted by the product owner\.\*\*)/g, '$1\n\n[Accepted HTML mockup](./mockup.html)'));
     const planPath = path.join(directory, 'plan.md');
-    await fs.writeFile(planPath, plan);
+    await fs.writeFile(planPath, plan + '\n[Accepted HTML mockup](./mockup.html)\n');
     await callback(planPath);
   } finally {
     await fs.rm(directory, { recursive: true, force: true });

@@ -32,6 +32,7 @@ Before drafting or revising Design, Plan, or Implement:
 - Record one explicit **UX mockup decision** before Design can complete:
   - **Required** when the slice materially changes a user-visible layout, interaction, navigation path, responsive behavior, or visual hierarchy.
   - **Not applicable** when it does not; record the specific reason instead of creating a placeholder visual.
+- For a story requiring a UI change in Full or Lightweight HDD, provide a story-owned, browser-openable HTML mockup with clickable links from the issue, Design context, and user-facing review. Verify the local `.html` file exists; a bare path or screenshot alone does not satisfy the HTML link requirement. Keep rendered high-fidelity evidence as well. Non-UI stories retain the specific not-applicable decision without an HTML requirement.
 - When a mockup is required:
   - name the UX ambiguity plus the states, transitions, and viewport variants the visual must resolve
   - inspect and link current-state evidence from `attachments/design.md` before creating the proposal; use a current screenshot, running surface, existing surface, prototype, or component that shows the real product context being changed
@@ -39,10 +40,12 @@ Before drafting or revising Design, Plan, or Implement:
   - if current-state evidence is unavailable or cannot be inspected, record the external evidence gate and leave Design open instead of inventing the current state or presenting an ungrounded proposal as complete
   - create and link a rendered high-fidelity mockup from `attachments/design.md` that resembles the current product and makes the proposed delta visible; Markdown prose, ASCII art, Mermaid diagrams, or fenced transcripts alone cannot qualify as the required mockup
   - use an available bitmap or image-generation capability for visual composition and discrete states; use a code-native interactive prototype when interaction, transition, or responsive behavior is the primary ambiguity
+  - link the HTML artifact in the review and identify its revision, states, and viewports; preserve the accepted HTML link in the plan and map its states, viewports, and interaction contracts to executable tasks
   - present the mockup in a numbered product-owner review with Accept, Revise, and Defer choices
+  - capture `mockup_presented` in timestamped progress notes when presenting the clickable artifact, with artifact link, revision identity, states, and viewports; capture `mockup_decided` after the actual engineer response, with the same artifact/revision, decision, and correction count. Reuse the existing progress-note writer and correlated target confirmation in imdone projects; use the documented Markdown fallback otherwise. These records support decision latency and correction counts, but do not invent a baseline or claim a speed improvement without user evidence.
   - record acceptance, requested revisions, or deferral in `attachments/progress-notes.md`; a deferral is an external evidence gate and leaves Design open
   - do not begin Plan until the product owner has accepted the mockup
-- Keep the mockup rule capability-neutral without weakening the fidelity floor. Require current-state evidence, a rendered high-fidelity artifact, and decision evidence, but do not require one vendor, image model, framework, or file format.
+- Keep mockup creation tools capability-neutral without weakening the fidelity floor; HTML is the browser-openable review artifact requested by this workflow. Require current-state evidence, a rendered high-fidelity artifact, and decision evidence, but do not require one vendor, image model, framework, or file format.
 - Create at least one Mermaid diagram in `attachments/diagram.md` during Design.
 - Use the diagrams to show the key boundary, flow, or code-change path that makes the design understandable to another engineer.
 - Keep the diagrams small and practical; choose the diagram types that best fits the decision instead of defaulting to a flowchart.

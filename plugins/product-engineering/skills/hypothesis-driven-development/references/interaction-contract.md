@@ -73,6 +73,8 @@ Plan checkpoint: the evaluated plan is ready. What should happen next?
 
 If the engineer confirms the evaluated plan, continue with the selected full or lightweight path. If the engineer requests changes, revise the plan and do not begin implementation until the revised evaluated plan is confirmed.
 
+For UI-changing Design reviews, include the clickable story-owned HTML mockup link and its revision in the user-facing review. Record presentation and actual decision evidence as described in `prove-the-outcome.md`; preserve the accepted artifact link when writing the plan. For a non-UI story, keep the explicit not-applicable decision instead of requiring a mockup.
+
 ## Review Loop
 
 For each unchecked item:

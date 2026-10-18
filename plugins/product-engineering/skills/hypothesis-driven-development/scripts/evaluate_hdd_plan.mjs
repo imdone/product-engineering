@@ -41,24 +41,59 @@ function isExecutable(task) {
   return !(NON_EXEC_RE.test(task.text) || NON_EXEC_RE.test(task.section));
 }
 
-function uxMockupDecision(planPath) {
+function mockupDecisionSections(planPath) {
   const designPath = path.join(path.dirname(planPath), "design.md");
-  if (!fs.existsSync(designPath)) return null;
+  if (!fs.existsSync(designPath)) return [];
 
   const design = fs.readFileSync(designPath, "utf8");
   const markers = [...design.matchAll(UX_MOCKUP_DECISION_RE)];
-  if (markers.length === 0) return null;
-
-  const decisions = markers.map((marker) => {
+  return markers.map((marker) => {
     const rest = design.slice(marker.index + marker[0].length);
     const nextHeading = /^#{2,6}\s+/m.exec(rest);
     return `${marker[0]}\n${nextHeading ? rest.slice(0, nextHeading.index) : rest}`;
   });
+}
+
+function uxMockupDecision(planPath) {
+  const decisions = mockupDecisionSections(planPath);
+  if (!decisions.length) return null;
   if (decisions.some((decision) => REQUIRED_RE.test(decision) && ACCEPTED_RE.test(decision))) {
     return "required-accepted";
   }
   if (decisions.every((decision) => NOT_APPLICABLE_RE.test(decision))) return "not-applicable";
   return "open";
+}
+
+function htmlLinks(markdown, sourcePath) {
+  const links = [];
+  for (const match of markdown.matchAll(/(?<!!)\[[^\]\n]*\]\(\s*(?:<([^>\n]+)>|([^\n)]+))\s*\)/g)) {
+    try {
+      const href = (match[1] || match[2]).trim().replace(/\s+["'][^"']*["']$/, '');
+      if (/^[a-z][a-z\d+.-]*:/i.test(href)) continue;
+      const pathname = decodeURIComponent(href.split(/[?#]/)[0]);
+      if (!/\.html$/i.test(pathname) || /[\x00-\x1f]/.test(pathname)) continue;
+      const resolved = path.resolve(path.dirname(sourcePath), pathname);
+      links.push(resolved);
+    } catch { /* A malformed link cannot identify the accepted artifact. */ }
+  }
+  return [...new Set(links)];
+}
+
+function acceptedHtmlFindings(planPath) {
+  const designPath = path.join(path.dirname(planPath), 'design.md');
+  const accepted = mockupDecisionSections(planPath).filter(section => REQUIRED_RE.test(section) && ACCEPTED_RE.test(section));
+  const targets = htmlLinks(accepted.join('\n'), designPath);
+  if (!targets.length) return [{ message: 'Accepted UI mockup must include a clickable local HTML artifact link in the Design mockup decision.' }];
+  const planTargets = htmlLinks(fs.readFileSync(planPath, 'utf8'), planPath);
+  const findings = [];
+  for (const target of targets) {
+    if (!fs.existsSync(target) || !fs.statSync(target).isFile()) {
+      findings.push({ message: `Accepted HTML mockup file is unavailable: ${target}` });
+    } else if (!planTargets.includes(target)) {
+      findings.push({ message: `Plan must link the same accepted HTML mockup artifact: ${target}` });
+    }
+  }
+  return findings;
 }
 
 function hasImplementationFidelityGate(tasks) {
@@ -102,6 +137,8 @@ export function evaluate(path) {
   const tasks = parseTasks(path);
   const executable = tasks.filter(isExecutable);
   const findings = [];
+
+  if (uxMockupDecision(path) === "required-accepted") findings.push(...acceptedHtmlFindings(path));
 
   if (executable.length === 0) {
     return [{ message: "No executable markdown tasks found." }];
