@@ -4,6 +4,8 @@
 
 ### Added
 
+- Link browser-openable HTML mockups from UI-changing HDD reviews and plans, validate the accepted artifact exists and matches the plan, and retain timestamped review evidence; non-UI stories keep the not-applicable path.
+
 - Validate every HDD Mermaid block with a pinned parser before Design completes or later diagram changes advance.
 
 ## 0.3.1 - 2026-09-30
