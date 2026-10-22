@@ -66,3 +66,25 @@ test('requires a conditional UX mockup and review gate during Design', async () 
   );
   assert.doesNotMatch(designGuidance, /must use (?:ImageGen|imagegen)/i);
 });
+
+test('organizes new mockups and links them from the agent session', async () => {
+  const guidance = await fs.readFile(path.join(skillRoot, 'references/prove-the-outcome.md'), 'utf8');
+  assert.match(guidance, /attachments\/mockups\//is);
+  assert.match(guidance, /descriptive.*revisioned.*filenames/is);
+  assert.match(guidance, /supporting.*assets.*current.*proposed.*renders/is);
+  assert.match(guidance, /agent session.*clickable.*HTML.*revision/is);
+  assert.match(guidance, /accepted revision.*Design.*Plan/is);
+  assert.match(guidance, /legacy.*(?:paths|links).*preserv|preserv.*legacy.*(?:paths|links)/is);
+});
+
+test('organizes all non-template HDD artifacts', async () => {
+  const guidance = await fs.readFile(path.join(skillRoot, 'references/session-setup.md'), 'utf8');
+  assert.match(guidance, /every new.*HDD-created.*(?:subdirectory|subdirectories)/is);
+  assert.match(guidance, /template-created.*(?:paths|locations)/is);
+  assert.match(guidance, /(?:do not|never).*filename.*(?:exempt|exception)|(?:exempt|exception).*not.*filename/is);
+  assert.match(guidance, /actual.*(?:story|attachment).*links/is);
+  assert.match(guidance, /attachments\/test-results\//is);
+  assert.match(guidance, /attachments\/plans\//is);
+  assert.match(guidance, /screaming architecture/i);
+  assert.match(guidance, /helper scripts beside.*artifact/is);
+});

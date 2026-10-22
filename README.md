@@ -17,6 +17,8 @@ You can practice HDD without imdone. The public skill works with Markdown files 
 - a plain-Markdown example that does not require a provider integration
 - an issue and contribution path for improving the method
 
+New mockups and their supporting assets/renders live in `attachments/mockups/` with descriptive revisioned filenames. The story and HDD agent session review both link directly to the intended HTML revision; Design and Plan retain the same accepted artifact. Existing mockup paths and links remain valid. Template-created story files keep their template paths. Every other new HDD-created story artifact goes in a purpose-based subdirectory under `attachments/`, such as `plans/`, `design/`, `test-results/`, or `review-feedback/`; use names that describe their contents, keep helpers beside the artifacts they support, follow actual story links, and preserve existing artifact links.
+
 ## Install From The Marketplace
 
 Both Codex and Claude Code use this GitHub repository as the marketplace and install the same `product-engineering` plugin payload.
@@ -74,6 +76,10 @@ Keep the story plus its evidence together. This plain-Markdown path does not req
 
 During UX-changing Design, HDD links current-state evidence, then creates and reviews a rendered high-fidelity mockup before Plan; Markdown-only artifacts cannot qualify. The plan then derives story-owned tests from the accepted states and viewports, compares rendered implementation evidence with that mockup, and corrects material mismatches before implementation completes. During non-UX Design, it records the reason a mockup is not applicable. For stories requiring a UI change, Full and Lightweight HDD provide a clickable, story-owned HTML mockup in the story and review. The plan links the same accepted HTML artifact and maps its states and viewports to tasks; missing files or a different plan artifact fail validation. Timestamped presentation and decision notes retain feedback and corrections for later outcome measurement.
 
+For low-risk work, lightweight HDD can reduce Define ceremony, but it still needs a minimum success measure before planning: an observable outcome, feedback path, and evidence/data-capture mechanism. Existing full or lightweight closing template metadata selects the saved mode before the skill asks. After the plan is drafted and evaluated, stop at the plan approval checkpoint before implementation or product-code edits; confirm the evaluated plan to continue, or request plan changes.
+
+After accepting the Hypothesis, choose **Continue through the evaluated Plan** to batch the remaining Define, Design, and Plan edits locally without routine artifact-review or push interruptions. The agent keeps local changes pending while useful work continues. At the evaluated Plan checkpoint, a due reminder may tell you to run `imdone push <sessionStoryKey>` when ready, without asking for a reply or offering agent execution; product-code edits still require Plan approval.
+
 Full HDD fits ambiguous, high-risk, cross-team, or implementation-heavy work. Lightweight HDD keeps the same evidence and plan-approval discipline while using fewer artifacts for low-risk changes.
 
 ## Why Imdone Is Optional
@@ -83,6 +89,8 @@ HDD is the method. imdone is an optional operational layer for teams that want t
 If you want that operational layer, learn more at [imdone.io](https://imdone.io) or install the [imdone CLI from npm](https://www.npmjs.com/package/imdone-cli).
 
 The public skill checks whether imdone is installed and whether the current workspace supports its project features. When those deterministic checks pass, it uses imdone for session state, progress notes, templates, and user-approved provider sync; in particular, it tries `imdone note` before writing a progress note directly. Existing full or lightweight template metadata selects the saved HDD mode before the skill asks a setup question. In an enabled marked session, the retained session story is the automatic note target; an explicitly named Jira key or numeric GitHub issue redirects only that note without changing session or global current state. Push reminders never interrupt useful work or ask the agent to publish changes: at an existing natural stopping point, HDD checks only the retained story and may tell the developer to run `imdone push <sessionStoryKey>` when ready. If imdone is absent or a command fails, HDD continues with local Markdown and external evidence gates. No imdone command, account, or project configuration is required to practice the method.
+
+For teams using multiple skills, see [LIGHTWEIGHT-HDD-WORK-CONTRACT.md](./LIGHTWEIGHT-HDD-WORK-CONTRACT.md); its template is optional.
 
 ## Feedback And Contributions
 

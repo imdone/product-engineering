@@ -6,6 +6,30 @@ Use this before the first workflow artifact is drafted.
 
 Before resolving full or lightweight HDD, read the story, progress notes, and attachment links. Then defer every other artifact until the resolved mode and current step require it. Do not bulk-load full-HDD-only context during initial setup.
 
+## Story Artifact Placement
+
+Put every new HDD-created story artifact in a purpose-based subdirectory under `attachments/`, unless that file is created by the selected story template. Preserve template-created paths and locations exactly. Determine the exception from the selected template and its attachment definitions; do not use a familiar filename alone to grant an exception. This rule applies in Full and Lightweight HDD and without imdone; product source files keep their repository locations.
+
+Choose directory names that describe the contents or user activity (screaming architecture), rather than the tool that generated them. Create only the directories needed by the story; avoid catch-all names such as `hdd/`, `misc/`, or `artifacts/`.
+
+Examples:
+- `attachments/mockups/`: proposed UI HTML, current/proposed renders, and their supporting source/assets; follow revision and review-link rules in `prove-the-outcome.md`.
+- `attachments/plans/`: non-template execution plans.
+- `attachments/design/`: non-template technical Design documents and architecture diagrams.
+- `attachments/test-results/`: test output and structured verification results.
+- `attachments/implementation-screenshots/`: rendered actual implementation states.
+- `attachments/reproductions/`: reproducible failure cases and their inputs/captures.
+- `attachments/review-feedback/`: reviewer decisions, reports, and skill feedback.
+- `attachments/success-metrics/`, `attachments/demo/`, or `attachments/progress-notes/`: the corresponding non-template workflow documents.
+
+Keep helper scripts beside the concrete artifact they create or verify, such as a renderer in `mockups/` or a test-result collector in `test-results/`, rather than collecting unrelated helpers in a generic scripts directory.
+
+Resolve artifact locations from actual story attachment links and template definitions before reading, creating, or resuming work. The root-level paths in this skill's artifact maps are template defaults and legacy examples, not permission to create extra files at the attachments root. Link every new artifact from the story, and use its actual relative path in Design, Plan, demo commands, Mermaid validation, and review messages. When Design and Plan live in different directories, add a single explicit Design link such as `[Design context](../design/design.md)` to the plan. The evaluator follows this link and resolves accepted mockup links relative to the actual Design document, preserving adjacent `design.md` as the legacy fallback. Missing or ambiguous explicit Design links leave evaluation failed; do not silently interpret an undiscovered Design as a non-UI decision.
+
+Preserve existing legacy artifact paths and links unless relocation is explicitly requested. Do not rename or relocate template-created files for this convention. If a relocation is requested, update all references and supporting relative links in the same change and verify them.
+
+For progress notes, reuse an existing or template-created destination. If the template does not create progress notes and none exist, choose a subdirectory destination (for example `attachments/progress-notes/progress-notes.md`), link it from the story, and use `imdone note <issueKey> "<note>" --file <resolved-note-path>` when available. Pass that same resolved destination to the Markdown fallback; never create a second root-level note file just because the default command/path appears elsewhere in this skill.
+
 ## Full HDD Artifact Map
 
 Use the story attachments as the source of truth when full HDD or the current step requires them:
@@ -94,6 +118,8 @@ Detect the issue provider from the issue file metadata comment before using prov
 - if it contains `github:`, treat the story as GitHub-backed
 - if neither marker is present, stay provider-neutral and do not invent provider-specific sync or field behavior
 - use this detected provider when talking about sync, blockers, rollout notes, or evidence capture
+
+For all new artifacts, follow Story Artifact Placement above; mockup-specific revision and review rules live in `prove-the-outcome.md`. Preserve existing artifact paths during session setup.
 
 Use the issue file as the attachment index for issue attachments:
 - make sure every existing issue attachment is linked from the issue file so artifacts are easy to find
