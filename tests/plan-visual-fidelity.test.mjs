@@ -21,10 +21,11 @@ const structurallyCompletePlan = `# Implementation Plan
 async function withStory(design, plan, callback) {
   const directory = await fs.mkdtemp(path.join(os.tmpdir(), 'hdd-visual-fidelity-'));
   try {
-    await fs.writeFile(path.join(directory, 'mockup.html'), '<!doctype html><title>Accepted UI mockup</title>');
-    await fs.writeFile(path.join(directory, 'design.md'), design.replace(/(\*\*Required and accepted by the product owner\.\*\*)/g, '$1\n\n[Accepted HTML mockup](./mockup.html)'));
+    await fs.mkdir(path.join(directory, 'mockups'));
+    await fs.writeFile(path.join(directory, 'mockups/navigation-r1.html'), '<!doctype html><title>Generic r1</title>');
+    await fs.writeFile(path.join(directory, 'design.md'), design.replace(/(\*\*Required and accepted by the product owner\.\*\*)/g, '$1\n\n[Accepted revision r1](./mockups/navigation-r1.html)'));
     const planPath = path.join(directory, 'plan.md');
-    await fs.writeFile(planPath, plan + '\n[Accepted HTML mockup](./mockup.html)\n');
+    await fs.writeFile(planPath, plan + '\n[Accepted revision r1](./mockups/navigation-r1.html)\n');
     await callback(planPath);
   } finally {
     await fs.rm(directory, { recursive: true, force: true });
@@ -124,4 +125,45 @@ test('enforces an accepted UX follow-on after an initial non-UX decision', async
     const findings = evaluate(planPath);
     assert.ok(findings.some(({ message }) => /visual fidelity/i.test(message)));
   });
+});
+
+
+test('rejects missing nested HTML and a plan that links a different accepted revision', async () => {
+  const design = '## UX mockup decision\n**Required and accepted by the product owner.**';
+  const plan = structurallyCompletePlan.replace(
+    '- [ ] **Evaluation:** run DOM, unit, structural, accessibility, and layout checks for the accepted responsive behavior.',
+    '- [ ] Evaluation: render the real implementation in accepted states and viewports, capture actual-state screenshots, compare with the accepted mockup, correct material mismatches and repeat evaluation.'
+  );
+  await withStory(design, plan, async (planPath) => {
+    assert.deepEqual(evaluate(planPath), []);
+    const htmlPath = path.join(path.dirname(planPath), 'mockups/navigation-r1.html');
+    await fs.rm(htmlPath);
+    assert.ok(evaluate(planPath).some(({ message }) => /unavailable/i.test(message)));
+    await fs.writeFile(htmlPath, '<title>Restored r1</title>');
+    await fs.writeFile(planPath, plan + '\n[Wrong revision](./mockups/navigation-r2.html)\n');
+    assert.ok(evaluate(planPath).some(({ message }) => /same accepted/i.test(message)));
+  });
+});
+
+test('follows linked Design across purpose-specific directories and rejects missing or ambiguous context', async () => {
+  const directory = await fs.mkdtemp(path.join(os.tmpdir(), 'hdd-purpose-directories-'));
+  try {
+    for (const folder of ['plans', 'design', 'mockups']) await fs.mkdir(path.join(directory, folder));
+    const designPath = path.join(directory, 'design/design.md');
+    await fs.writeFile(designPath, '## UX mockup decision\nRequired and accepted by the product owner.\n[Accepted r1](../mockups/navigation-r1.html)');
+    await fs.writeFile(path.join(directory, 'mockups/navigation-r1.html'), '<title>r1</title>');
+    const planPath = path.join(directory, 'plans/plan.md');
+    const linkedPlan = structurallyCompletePlan + '\n[Design context](../design/design.md)\n[Accepted r1](../mockups/navigation-r1.html)\n';
+    await fs.writeFile(planPath, linkedPlan);
+    assert.ok(evaluate(planPath).some(({ message }) => /visual fidelity/i.test(message)));
+    await fs.writeFile(planPath, linkedPlan.replace('run DOM, unit, structural, accessibility, and layout checks for the accepted responsive behavior.', 'render the real implementation in accepted states and viewports, capture actual-state screenshots, compare with the accepted mockup, correct material mismatches and repeat evaluation.'));
+    assert.deepEqual(evaluate(planPath), []);
+    await fs.writeFile(planPath, (await fs.readFile(planPath, 'utf8')) + '\n[Other Design](../other/design.md)\n');
+    assert.ok(evaluate(planPath).some(({ message }) => /ambiguous/i.test(message)));
+    await fs.writeFile(planPath, (await fs.readFile(planPath, 'utf8')).replace('\n[Other Design](../other/design.md)\n', ''));
+    await fs.rm(designPath);
+    assert.ok(evaluate(planPath).some(({ message }) => /Design.*unavailable/i.test(message)));
+  } finally {
+    await fs.rm(directory, { recursive: true, force: true });
+  }
 });

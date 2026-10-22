@@ -41,9 +41,21 @@ function isExecutable(task) {
   return !(NON_EXEC_RE.test(task.text) || NON_EXEC_RE.test(task.section));
 }
 
+function designContext(planPath) {
+  const links = localLinks(fs.readFileSync(planPath, 'utf8'), planPath, '.md')
+    .filter(target => path.basename(target).toLowerCase() === 'design.md');
+  if (links.length > 1) return { path: null, findings: [{ message: 'Plan must link exactly one Design context; multiple design.md targets are ambiguous.' }] };
+  const designPath = links[0] || path.join(path.dirname(planPath), 'design.md');
+  const available = fs.existsSync(designPath) && fs.statSync(designPath).isFile();
+  return {
+    path: available ? designPath : null,
+    findings: links.length && !available ? [{ message: `Linked Design context is unavailable: ${designPath}` }] : []
+  };
+}
+
 function mockupDecisionSections(planPath) {
-  const designPath = path.join(path.dirname(planPath), "design.md");
-  if (!fs.existsSync(designPath)) return [];
+  const designPath = designContext(planPath).path;
+  if (!designPath) return [];
 
   const design = fs.readFileSync(designPath, "utf8");
   const markers = [...design.matchAll(UX_MOCKUP_DECISION_RE)];
@@ -64,14 +76,14 @@ function uxMockupDecision(planPath) {
   return "open";
 }
 
-function htmlLinks(markdown, sourcePath) {
+function localLinks(markdown, sourcePath, extension = '.html') {
   const links = [];
   for (const match of markdown.matchAll(/(?<!!)\[[^\]\n]*\]\(\s*(?:<([^>\n]+)>|([^\n)]+))\s*\)/g)) {
     try {
       const href = (match[1] || match[2]).trim().replace(/\s+["'][^"']*["']$/, '');
       if (/^[a-z][a-z\d+.-]*:/i.test(href)) continue;
       const pathname = decodeURIComponent(href.split(/[?#]/)[0]);
-      if (!/\.html$/i.test(pathname) || /[\x00-\x1f]/.test(pathname)) continue;
+      if (!pathname.toLowerCase().endsWith(extension) || /[\x00-\x1f]/.test(pathname)) continue;
       const resolved = path.resolve(path.dirname(sourcePath), pathname);
       links.push(resolved);
     } catch { /* A malformed link cannot identify the accepted artifact. */ }
@@ -80,11 +92,11 @@ function htmlLinks(markdown, sourcePath) {
 }
 
 function acceptedHtmlFindings(planPath) {
-  const designPath = path.join(path.dirname(planPath), 'design.md');
+  const designPath = designContext(planPath).path;
   const accepted = mockupDecisionSections(planPath).filter(section => REQUIRED_RE.test(section) && ACCEPTED_RE.test(section));
-  const targets = htmlLinks(accepted.join('\n'), designPath);
+  const targets = localLinks(accepted.join('\n'), designPath);
   if (!targets.length) return [{ message: 'Accepted UI mockup must include a clickable local HTML artifact link in the Design mockup decision.' }];
-  const planTargets = htmlLinks(fs.readFileSync(planPath, 'utf8'), planPath);
+  const planTargets = localLinks(fs.readFileSync(planPath, 'utf8'), planPath);
   const findings = [];
   for (const target of targets) {
     if (!fs.existsSync(target) || !fs.statSync(target).isFile()) {
@@ -136,7 +148,7 @@ export function parseTasks(path) {
 export function evaluate(path) {
   const tasks = parseTasks(path);
   const executable = tasks.filter(isExecutable);
-  const findings = [];
+  const findings = [...designContext(path).findings];
 
   if (uxMockupDecision(path) === "required-accepted") findings.push(...acceptedHtmlFindings(path));
 

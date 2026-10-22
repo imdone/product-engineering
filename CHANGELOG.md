@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.4.0 - 2026-10-22
+
+### Changed
+
+- Group all new non-template HDD story artifacts in purpose-based attachment subdirectories; keep template-created paths, revisioned mockup filenames, direct story/agent-review links, accepted-artifact identity, and existing artifact links.
+
 ## 0.3.2 - 2026-10-01
 
 ### Added

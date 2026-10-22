@@ -19,6 +19,8 @@ Keep the retained HDD session story as the automatic progress-note target. Confi
 
 Infer Full or Lightweight HDD from closing story metadata before asking the engineer to repeat the choice: `#HDD-template` selects Full HDD, while `#HDD-light-template` or the corresponding lightweight `imdoneTemplate` selects Lightweight HDD. Lightweight metadata wins over a legacy companion full tag.
 
+Keep progress-note activation deterministic and prompt-free: an explicit HDD, HDD Light, or `imdone-ai` skill request, `imdone-session-story:v1` from `imdone hdd`, or `imdone-story-context:v1` from `imdone ai` enables progress-note capture for the resolved session story. An explicit opt-out always wins; without an explicit request or recognized marker, capture stays off. Never ask for consent to enable progress notes. Story tags and legacy `hddProgressNotes:enabled` metadata do not activate ordinary direct-agent sessions and are not required by recognized sessions.
+
 Before opening a pull request:
 
 ```sh
