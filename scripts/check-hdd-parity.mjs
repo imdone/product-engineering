@@ -23,6 +23,7 @@ export const requiredSharedFiles = [
   'references/confirm-the-outcome.md',
   'references/define-the-outcome.md',
   'references/dependency-direction-rule.md',
+  'references/description-size.md',
   'references/deploy-the-outcome.md',
   'references/interaction-contract.md',
   'references/interactive-facilitation.md',
@@ -42,7 +43,8 @@ export const requiredSharedFiles = [
   'scripts/evaluate_hdd_plan.mjs',
   'scripts/evaluate_hdd_skill.mjs',
   'scripts/evaluate_progress_notes_contract.mjs',
-  'scripts/validate_mermaid.mjs'
+  'scripts/validate_mermaid.mjs',
+  'scripts/validate_story_description.mjs'
 ];
 
 export const forbiddenHardDependencies = [

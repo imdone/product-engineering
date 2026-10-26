@@ -79,6 +79,10 @@ For mockup placement, naming, accepted-revision identity, and legacy-link preser
 
 For UI-changing Design reviews, include the clickable story-owned HTML mockup link and its revision in the user-facing review. Record presentation and actual decision evidence as described in `prove-the-outcome.md`; preserve the accepted artifact link when writing the plan. For a non-UI story, keep the explicit not-applicable decision instead of requiring a mockup.
 
+## Description And Evidence Checks
+
+After material story-description/index growth and before the evaluated Plan handoff, use `references/description-size.md`. Report the strongest available read-only result, its representation and count units, and any unresolved provider-validity gate. Keep the issue list limited to root-level attachment files; use attachments/README.md and described READMEs in every subdirectory for nested navigation. Preserve all evidence and accepted artifact identities. An unverified portable result does not mean the provider description is valid or invalid, and does not authorize sync or create a new permission stop when local work can continue.
+
 ## Review Loop
 
 For each unchecked item:

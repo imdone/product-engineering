@@ -24,11 +24,11 @@ Examples:
 
 Keep helper scripts beside the concrete artifact they create or verify, such as a renderer in `mockups/` or a test-result collector in `test-results/`, rather than collecting unrelated helpers in a generic scripts directory.
 
-Resolve artifact locations from actual story attachment links and template definitions before reading, creating, or resuming work. The root-level paths in this skill's artifact maps are template defaults and legacy examples, not permission to create extra files at the attachments root. Link every new artifact from the story, and use its actual relative path in Design, Plan, demo commands, Mermaid validation, and review messages. When Design and Plan live in different directories, add a single explicit Design link such as `[Design context](../design/design.md)` to the plan. The evaluator follows this link and resolves accepted mockup links relative to the actual Design document, preserving adjacent `design.md` as the legacy fallback. Missing or ambiguous explicit Design links leave evaluation failed; do not silently interpret an undiscovered Design as a non-UI decision.
+Resolve artifact locations from actual story attachment links and template definitions before reading, creating, or resuming work. The root-level paths in this skill's artifact maps are template defaults and legacy examples, not permission to create extra files at the attachments root. Make every new artifact reachable from the story through the root attachment list and directory READMEs, and use its actual relative path in Design, Plan, demo commands, Mermaid validation, and review messages. When Design and Plan live in different directories, add a single explicit Design link such as `[Design context](../design/design.md)` to the plan. The evaluator follows this link and resolves accepted mockup links relative to the actual Design document, preserving adjacent `design.md` as the legacy fallback. Missing or ambiguous explicit Design links leave evaluation failed; do not silently interpret an undiscovered Design as a non-UI decision.
 
 Preserve existing legacy artifact paths and links unless relocation is explicitly requested. Do not rename or relocate template-created files for this convention. If a relocation is requested, update all references and supporting relative links in the same change and verify them.
 
-For progress notes, reuse an existing or template-created destination. If the template does not create progress notes and none exist, choose a subdirectory destination (for example `attachments/progress-notes/progress-notes.md`), link it from the story, and use `imdone note <issueKey> "<note>" --file <resolved-note-path>` when available. Pass that same resolved destination to the Markdown fallback; never create a second root-level note file just because the default command/path appears elsewhere in this skill.
+For progress notes, reuse an existing or template-created destination. If the template does not create progress notes and none exist, choose a subdirectory destination (for example `attachments/progress-notes/progress-notes.md`), link it from its directory README so it remains reachable from the story, and use `imdone note <issueKey> "<note>" --file <resolved-note-path>` when available. Pass that same resolved destination to the Markdown fallback; never create a second root-level note file just because the default command/path appears elsewhere in this skill.
 
 ## Full HDD Artifact Map
 
@@ -121,12 +121,9 @@ Detect the issue provider from the issue file metadata comment before using prov
 
 For all new artifacts, follow Story Artifact Placement above; mockup-specific revision and review rules live in `prove-the-outcome.md`. Preserve existing artifact paths during session setup.
 
-Use the issue file as the attachment index for issue attachments:
-- make sure every existing issue attachment is linked from the issue file so artifacts are easy to find
-- when you create a new issue attachment, add or update an issue-file link in the same pass
-- if the template already includes a link, leave it where it is
-- duplicate links are acceptable when adding a missing link is simpler than normalizing existing ones
-- keep links current when attachment names change or when new focused attachments are added for clarity
+List only files directly inside `attachments/` in the issue file, including `attachments/README.md`. Every attachment subdirectory contains `README.md` with links and descriptions of its immediate files and child directories; directory links target child READMEs. The root README provides navigation to top-level subdirectories. Keep all nested artifacts reachable recursively without adding their deep links to the issue. Preserve file paths, evidence, and accepted artifact identities. Route nested workflow and mockup links through this hierarchy in the issue, while Design, Plan, and agent reviews retain direct links to their actual targets.
+
+After material description or README navigation changes and before the evaluated Plan handoff, follow `references/description-size.md` for directory-index details and the strongest available read-only description check. Keep provider validity explicitly unverified when only local measurement is available. Never silently truncate or lose evidence.
 
 After full or lightweight HDD is resolved, handle templates by mode:
 - for full HDD, detect this by the absence of `#HDD-template` in the issue content or by obviously missing full HDD template structure

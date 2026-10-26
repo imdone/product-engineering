@@ -4,6 +4,8 @@
 
 ### Changed
 
+- Check description growth during HDD with an available read-only provider validator or a portable local measurement that preserves explicit uncertainty; list only root-level attachment files in issues and keep nested evidence reachable through README.md files with links and descriptions in every subdirectory without silently truncating story content.
+
 - Group all new non-template HDD story artifacts in purpose-based attachment subdirectories; keep template-created paths, revisioned mockup filenames, direct story/agent-review links, accepted-artifact identity, and existing artifact links.
 
 ## 0.3.2 - 2026-10-01

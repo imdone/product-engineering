@@ -17,7 +17,9 @@ You can practice HDD without imdone. The public skill works with Markdown files 
 - a plain-Markdown example that does not require a provider integration
 - an issue and contribution path for improving the method
 
-New mockups and their supporting assets/renders live in `attachments/mockups/` with descriptive revisioned filenames. The story and HDD agent session review both link directly to the intended HTML revision; Design and Plan retain the same accepted artifact. Existing mockup paths and links remain valid. Template-created story files keep their template paths. Every other new HDD-created story artifact goes in a purpose-based subdirectory under `attachments/`, such as `plans/`, `design/`, `test-results/`, or `review-feedback/`; use names that describe their contents, keep helpers beside the artifacts they support, follow actual story links, and preserve existing artifact links.
+New mockups and their supporting assets/renders live in `attachments/mockups/` with descriptive revisioned filenames. The story reaches the intended HTML revision through attachment directory READMEs; the HDD agent session review, Design, and Plan link directly to the same accepted artifact. Existing mockup paths and links remain valid. Template-created story files keep their template paths. Every other new HDD-created story artifact goes in a purpose-based subdirectory under `attachments/`, such as `plans/`, `design/`, `test-results/`, or `review-feedback/`; use names that describe their contents, keep helpers beside the artifacts they support, follow actual story links, and preserve existing artifact links.
+
+List only root-level attachment files in the issue. Link attachments/README.md for directory navigation; every attachment subdirectory has a README.md with links and descriptions of its files and child directories. The skill checks description growth with an available read-only provider validator; without imdone, its portable helper reports local size and explicitly unverified provider validity. It preserves evidence rather than silently truncating descriptions.
 
 ## Install From The Marketplace
 
