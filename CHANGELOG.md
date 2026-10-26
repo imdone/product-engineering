@@ -1,8 +1,15 @@
 # Changelog
 
+## 0.4.1 - 2026-10-26
+
+### Changed
+
+- Choose portable HDD artifact filenames before writing or linking evidence, including colon-free timestamps, reserved-name and path-collision checks, while preserving existing attachment identities.
+
 ## 0.4.0 - 2026-10-22
 
 ### Changed
+
 
 - Check description growth during HDD with an available read-only provider validator or a portable local measurement that preserves explicit uncertainty; list only root-level attachment files in issues and keep nested evidence reachable through README.md files with links and descriptions in every subdirectory without silently truncating story content.
 

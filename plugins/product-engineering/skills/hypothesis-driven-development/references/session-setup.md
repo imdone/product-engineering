@@ -30,6 +30,14 @@ Preserve existing legacy artifact paths and links unless relocation is explicitl
 
 For progress notes, reuse an existing or template-created destination. If the template does not create progress notes and none exist, choose a subdirectory destination (for example `attachments/progress-notes/progress-notes.md`), link it from its directory README so it remains reachable from the story, and use `imdone note <issueKey> "<note>" --file <resolved-note-path>` when available. Pass that same resolved destination to the Markdown fallback; never create a second root-level note file just because the default command/path appears elsewhere in this skill.
 
+### Portable artifact filenames
+
+Before creating any HDD artifact file or folder, check every path segment for portability. This includes generated reports, screenshots, helper outputs and timestamped evidence. Use descriptive names with letters, digits, hyphens, underscores and dots; spaces and Unicode are allowed when portable. Use `/` only between directories, never an absolute path or `.` / `..` segment. Avoid backslashes, control characters and `<>:"|?*`, trailing dots or spaces, and Windows reserved names such as `CON`, `PRN`, `AUX`, `NUL`, `COM1`–`COM9` and `LPT1`–`LPT9` (including names with extensions). Keep `.metadata.yml` for provider metadata.
+
+Use a colon-free timestamp such as `2026-10-26T20-06-43Z`; do not use raw ISO timestamps containing colons in filenames. Check that new paths do not collide after Unicode NFC normalization and case folding, or use an existing file as a parent directory. Apply these checks when choosing a name, before writing or linking the artifact, rather than waiting for provider push to fail.
+
+Do not automatically rename or relocate existing attachments to enforce this guidance. Report the exact offending relative path safely, propose a portable name, and update its links together when the user chooses the rename. Preserve accepted evidence identities and template-created paths.
+
 ## Full HDD Artifact Map
 
 Use the story attachments as the source of truth when full HDD or the current step requires them:
