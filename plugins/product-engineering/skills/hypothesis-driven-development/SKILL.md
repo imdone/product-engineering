@@ -20,6 +20,10 @@ Do not depend on imdone. If the deterministic checks fail, continue the HDD work
 
 Follow **Story Artifact Placement** in `references/session-setup.md` for every HDD-created story file: template-created files retain template paths; every other new artifact goes in a purpose-based subdirectory under `attachments/`. Resolve actual story links before using the default paths listed below, preserve legacy paths, and pass a resolved `--file` destination to `imdone note` when a non-template progress-note file belongs in a subdirectory. Keep product source files in their repository locations.
 
+## Evidence Retention
+
+Keep compact verification summaries with the story. Capture raw command logs, test-runner reports, coverage dumps, and traces in session-owned temporary storage outside the repository and backlog; delete them after extracting the useful results, including failed runs. Do not attach, commit, upload, or archive raw output as HDD evidence. Follow `references/evidence-retention.md` when running checks, recording proof, cleaning up, or resuming interrupted verification.
+
 ## Operating Model
 
 Guide a story through outcome-focused phases with explicit Deploy and Confirm gates:
@@ -192,7 +196,7 @@ Load only the reference file needed for the current decision:
 
 - Safe to re-run after interruption.
 - Prefer updating current story artifacts over free-floating advice.
-- Keep the issue attachment list limited to files directly under `attachments/`. Its root `README.md` links to child READMEs; every attachment subdirectory README links to and describes its immediate files and child directories. Preserve artifact contents, paths, and accepted revision identities while routing nested navigation through the README hierarchy. Follow `references/description-size.md` after material description/index growth and at Plan handoff; distinguish final provider checks from provisional local measurements and never silently truncate content.
+- Keep the issue attachment list limited to files directly under `attachments/`. Its root `README.md` links to child READMEs; every attachment subdirectory README links to and describes its immediate files and child directories. Preserve curated artifact contents, paths, and accepted revision identities while routing nested navigation through the README hierarchy; raw verification output follows Evidence Retention instead of permanent preservation. Follow `references/description-size.md` after material description/index growth and at Plan handoff; distinguish final provider checks from provisional local measurements and never silently truncate content.
 - Keep HDD session state in the current story and linked Markdown artifacts so another human or agent can resume without proprietary state.
 - In imdone projects, use `imdone agent-config` as the only boundary for HDD config reads and writes, including push reminder settings, push timing state, `active_story`, and saved-key path resolution. Do not parse or rewrite agent config YAML inline, and do not call local skill helper scripts for configuration state. Outside imdone projects, skip agent-config behavior and keep state in the current Markdown artifacts.
 - Before displaying any push reminder in an imdone project, use `imdone agent-config get-config` to determine whether the configured phase or interval makes a reminder due, then apply the natural-stopping-point policy in `references/interaction-contract.md`. Reminder eligibility never creates a new interaction turn. If imdone is unavailable, skip push reminders and record any publish/sync need as an external evidence gate.

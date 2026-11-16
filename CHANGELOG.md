@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.4.2 - 2026-11-15
+
+### Changed
+
+- Keep raw verification logs, test-runner reports and coverage dumps in session-owned temporary storage, delete them after extracting compact results, and retain commands, outcomes, failure diagnostics and relevant metrics with the story. Preserve curated evidence and repair links when users request cleanup of existing raw attachments.
+
 ## 0.4.1 - 2026-10-26
 
 ### Changed

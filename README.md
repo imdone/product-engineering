@@ -67,7 +67,7 @@ To practice without an AI plugin loader, copy the full template into your work t
 cp templates/hypothesis-driven-development.md my-hdd-story.md
 ```
 
-Keep the story plus its evidence together. This plain-Markdown path does not require Codex, Claude Code, or imdone.
+Keep the story plus its evidence together. This plain-Markdown path does not require Codex, Claude Code, or imdone. Raw verification logs and machine reports stay in temporary storage and are deleted after summarization. Keep compact commands, results, diagnostics and relevant metrics with the story, alongside its designs, screenshots and deliverables.
 
 ## The HDD Loop
 

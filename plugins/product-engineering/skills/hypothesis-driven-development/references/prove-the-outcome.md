@@ -168,6 +168,7 @@ Before drafting or revising Design, Plan, or Implement:
 
 ## Implement
 
+- Follow `evidence-retention.md` for every red, green, refactor, coverage, and full-suite run: capture raw output outside the repository/backlog, save a compact result with the story, and delete the temporary output after summarizing it. Failed and superseded runs need concise diagnostics, not retained transcripts.
 - Define done in the order the code will change.
 - Call out the first red test, first green change, and cleanup or contract step.
 - Implement strictly top-to-bottom through `attachments/plan.md`.

@@ -8,7 +8,7 @@ Before resolving full or lightweight HDD, read the story, progress notes, and at
 
 ## Story Artifact Placement
 
-Put every new HDD-created story artifact in a purpose-based subdirectory under `attachments/`, unless that file is created by the selected story template. Preserve template-created paths and locations exactly. Determine the exception from the selected template and its attachment definitions; do not use a familiar filename alone to grant an exception. This rule applies in Full and Lightweight HDD and without imdone; product source files keep their repository locations.
+Put every new durable HDD-created story artifact in a purpose-based subdirectory under `attachments/`, unless that file is created by the selected story template. Preserve template-created paths and locations exactly. Determine the exception from the selected template and its attachment definitions; do not use a familiar filename alone to grant an exception. This rule applies in Full and Lightweight HDD and without imdone; product source files keep their repository locations. Raw verification logs and machine reports are temporary, not story artifacts; follow `evidence-retention.md` before capturing them.
 
 Choose directory names that describe the contents or user activity (screaming architecture), rather than the tool that generated them. Create only the directories needed by the story; avoid catch-all names such as `hdd/`, `misc/`, or `artifacts/`.
 
@@ -16,7 +16,7 @@ Examples:
 - `attachments/mockups/`: proposed UI HTML, current/proposed renders, and their supporting source/assets; follow revision and review-link rules in `prove-the-outcome.md`.
 - `attachments/plans/`: non-template execution plans.
 - `attachments/design/`: non-template technical Design documents and architecture diagrams.
-- `attachments/test-results/`: test output and structured verification results.
+- `attachments/test-results/`: compact verification summaries, relevant aggregate measurements, and reproducible commands; raw output stays in temporary storage and is deleted after summarization.
 - `attachments/implementation-screenshots/`: rendered actual implementation states.
 - `attachments/reproductions/`: reproducible failure cases and their inputs/captures.
 - `attachments/review-feedback/`: reviewer decisions, reports, and skill feedback.

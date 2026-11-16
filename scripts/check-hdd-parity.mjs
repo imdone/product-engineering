@@ -7,6 +7,7 @@ import { fileURLToPath } from 'node:url';
 
 export const requiredSharedSections = [
   '## Operating Model',
+  '## Evidence Retention',
   '## Session Contract',
   '## Phase Execution',
   '### Phase 2.5: Deploy the Outcome',
@@ -25,6 +26,7 @@ export const requiredSharedFiles = [
   'references/dependency-direction-rule.md',
   'references/description-size.md',
   'references/deploy-the-outcome.md',
+  'references/evidence-retention.md',
   'references/interaction-contract.md',
   'references/interactive-facilitation.md',
   'references/interactive-review-pattern.md',

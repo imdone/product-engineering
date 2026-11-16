@@ -1,6 +1,6 @@
 # Description size and evidence navigation
 
-Read this after material story-description or evidence-index growth and before handing off an evaluated Plan. A provider description has a different budget from the story's attachment files. Preserve evidence rather than silently truncating it to fit.
+Read this after material story-description or evidence-index growth and before handing off an evaluated Plan. A provider description has a different budget from the story's attachment files. Preserve curated evidence rather than silently truncating it to fit. Raw logs and machine reports follow `evidence-retention.md`: summarize them and delete the temporary originals instead of adding attachments or indexes for them.
 
 ## Root files and directory READMEs
 
@@ -23,7 +23,7 @@ In an imdone project, check whether `imdone validate-description --help` is avai
 - Unverified means that provider policy, pending/missing attachment identity, changed files, or other conversion context prevents a definitive claim. State that uncertainty and record the next validation step. Do not use fallback local attachment URLs to certify a later upload-resolved description.
 - Command/input failure requires diagnosing the local input or using the portable fallback; never run push, template, lint-with-writes, or authenticated provider setup merely to obtain a size check.
 
-Report only safe size/status fields; do not paste descriptions, attachment URLs, auth headers, or credentials into notes. Users may save JSON output as an evidence attachment. The CLI provides an issue-report link; sending feedback is the user's choice.
+Report only safe size/status fields; do not paste descriptions, attachment URLs, auth headers, or credentials into notes. Record the relevant status, size, units, limit, uncertainty, and next action in a compact summary; do not retain the command's raw JSON as an evidence attachment. The CLI provides an issue-report link; sending feedback is the user's choice.
 
 ## Portable fallback without imdone
 
